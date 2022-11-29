@@ -15,6 +15,22 @@ html,body{
   box-sizing: border-box;
 }
 
+html{
+  font-size: 10px;
+}
+
+body{
+  font-size: 1.6rem;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
 #app {
   width: 100%;
   height: 100%;
