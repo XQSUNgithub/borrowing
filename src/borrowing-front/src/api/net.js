@@ -1,13 +1,14 @@
 import axios from "axios";
-import {ID} from './util';
+import {ID,success,error,setMemory,loadMemory,syncMemory} from './util';
 import {proxyURL,apiUrl} from "./config";
 import querystring from "querystring";
-import { ElMessage } from 'element-plus';
 
 export const handle = axios.create({
     baseURL: proxyURL,
     timeout: 5000,
 });
+
+// console.log(loadMemory("token"));
 
 export const login = (uuid,password)=>{
     return new Promise((resolve,reject)=>{
@@ -15,26 +16,24 @@ export const login = (uuid,password)=>{
             post(apiUrl.login,{
                 uuid,password
             }).then(v=>{
-                console.log(v);
-                ElMessage({
-                    message:"登陆成功",
-                    type:"success"
-                });
-                resolve(v);
+                const {data:{code,msg,data}} = v;
+                if(data){
+                    success("登陆成功");
+                    setMemory("token",data);
+                    syncMemory("token");
+                    resolve(data);//"0424585384"
+                }else{
+                    error("登陆失败");
+                    reject(null);
+                }
             })
             .catch(err=>{
                 console.log(err);
-                ElMessage({
-                    message:"请求失败",
-                    type:"error"
-                });
+                error("请求失败");
                 reject(err);
             });
         }else{
-            ElMessage({
-                message:"账号密码不为空",
-                type:"error"
-            });
+            error("账号密码不为空");
             reject(null);
         }
     });
@@ -43,38 +42,31 @@ export const login = (uuid,password)=>{
 export const regist = (realname,password,again,invitecode)=>{
     return new Promise((resolve,reject)=>{
         if(realname.length&&password.length&&again.length&&invitecode.length){
-            console.log(invitecode);
             if(password===again){
                 post(apiUrl.regist,{
                     realname,password,invitecode
                 }).then(v=>{
-                    console.log(v);
-                    ElMessage({
-                        message:"注册成功",
-                        type:"success"
-                    });
-                    resolve(v);
+                    const {data:{code,msg,data}} = v;
+                    if(data){
+                        success("注册成功");
+                        console.log(data);
+                        resolve(data);//"0424585384"
+                    }else{
+                        error("注册失败");
+                        reject(null);
+                    }
                 })
                 .catch(err=>{
                     console.log(err);
-                    ElMessage({
-                        message:"请求失败",
-                        type:"error"
-                    });
+                    error("请求失败");
                     reject(err);
                 });
             }else{
-                ElMessage({
-                    message:"两次输入密码不一致",
-                    type:"error"
-                });
+                error("两次输入密码不一致");
                 reject(null);
             }
         }else{
-            ElMessage({
-                message:"参数不全",
-                type:"error"
-            });
+            error("参数不全");
             reject(null);
         }
     });
