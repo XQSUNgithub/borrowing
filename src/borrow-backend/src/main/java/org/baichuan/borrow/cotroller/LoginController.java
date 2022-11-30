@@ -1,5 +1,6 @@
 package org.baichuan.borrow.cotroller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.baichuan.borrow.domin.LoginVo;
 import org.baichuan.borrow.result.Result;
 import org.baichuan.borrow.service.UserService;
@@ -13,7 +14,7 @@ import static org.baichuan.borrow.result.CodeMsg.REQUEST_ERROR;
 
 @Slf4j
 @Controller
-@RequestMapping("/serve/login")
+@RequestMapping("login")
 public class LoginController {
 
     @Autowired
@@ -23,7 +24,8 @@ public class LoginController {
     @ResponseBody
     //返回类与前端关系？
     public Result<String> register(HttpServletResponse response, LoginVo loginVo) throws Exception {
-        log.info("password:"+loginVo.getPassword()+"realname:"+loginVo.getRealname()+"invitecode:"+loginVo.getInvitecode());
+        //log.info(loginVo.toJSONString());
+       log.info("password:"+loginVo.getPassword()+"realname:"+loginVo.getRealname()+"invitecode:"+loginVo.getInvitecode());
         //登录
         String id=userService.register(loginVo);
         if(id==null) return Result.error(REQUEST_ERROR);

@@ -95,4 +95,9 @@ public class UserService {
 		return token;
 	}
 
+	public List<User> list(){
+		//userDao.list()
+		return null;
+	}
+
 }

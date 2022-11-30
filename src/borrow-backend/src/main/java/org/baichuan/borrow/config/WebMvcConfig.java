@@ -21,11 +21,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
       //  registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 
-    @Override
+  /*  @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*.paiflo.com")
                 .allowedOrigins("GET","POST")
                 .allowCredentials(true);
-    }
+    }*/
 }
