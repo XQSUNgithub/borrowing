@@ -8,13 +8,13 @@
                 :prefix-icon="Search"
             />
             <div class="tab"></div>
-            <a href="#">登录</a>
+            <a href="/login">登录</a>
             <div style="width:20px;">|</div>
-            <a href="#">注册</a>
+            <a href="/register">注册</a>
         </div>
         <div class="body">
             <div class="card">
-                <div class="ele" v-for="i in 10">
+                <div class="ele" v-for="i in 30">
 
                 </div>
                 <!-- <img src="@/assets/logo.png" v-for="i in 10"/> -->
@@ -27,8 +27,6 @@
 </template>
 
 <script setup>
-import { getTokenFromService,getUserInfo } from '@/api/net';
-import {getInfoFromAccessToken} from '@/api/config';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import {  Search } from '@element-plus/icons-vue'
@@ -92,11 +90,11 @@ a:hover{
     border-right: 1px solid gray;
     column-count: 3;
     column-gap: 12px;
-    padding: auto;
+    padding: 12px;
 }
 
 .more{
-    width: 200px;
+    width: 500px;
     background-color: antiquewhite;
 }
 

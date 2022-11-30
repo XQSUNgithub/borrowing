@@ -9,8 +9,6 @@ import error from "@/pages/error/error.vue";
 import adminMenu from "@/pages/admin/admin-menu.vue";
 import adminView from "@/pages/admin/admin-view.vue";
 
-import menu from "@/components/menu.vue";
-
 const routes = [
     {
         path: "/",
@@ -19,6 +17,10 @@ const routes = [
     {
         path: "/login",
         component:login
+    },
+    {
+      path: "/register",
+      component:login
     },
     {
       path: "/404",

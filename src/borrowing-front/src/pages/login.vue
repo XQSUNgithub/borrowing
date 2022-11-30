@@ -1,22 +1,20 @@
 <template>
     <div id="box">
         <section id="content">
-            <!--头部-->
             <div class="content-header clearfix">
                 <a :class="{current:sel}" @click="(sel=true)">登录</a>
                 <a :class="{current:!sel}" @click="(sel=false)">注册</a>
             </div>
-            <!--内容-->
             <div class="content-body">
                 <div class="dom" v-show="sel">
                     <form action="#">
                         <div class="s1">
                             <h4>账号</h4>
-                            <input name="user" type="text" placeholder="用户名/手机/邮箱">
+                            <input name="user" v-model="loginForm.uuid" type="text" placeholder="用户名">
                         </div>
                         <div class="s1">
                             <h4>密码</h4>
-                            <input name="pwd" type="password" placeholder="请输入密码">
+                            <input name="pwd" v-model="loginForm.password" type="password" placeholder="请输入密码">
                         </div>
                         <div class="s2">
                             <input type="checkbox">
@@ -29,32 +27,27 @@
                             <a href="#">找回密码</a>
                             <span>|</span>
                             <span>还没有注册帐号?</span>
-                            <a href="#">立即注册</a>
+                            <a href="/register">立即注册</a>
                         </div>
                     </div>
                 </div>
                 <div class="dom" v-show="!sel">
                     <form action="#">
                         <div class="s1">
-                            <h4>手机号码</h4>
-                            <input name="phone" type="text" placeholder="填写你的手机号码作为登录账户">
-                        </div>
-                        <div class="s1">
-                            <h4>用户名</h4>
-                            <input name="user" type="text" placeholder="中、英文均可, 最长20个字符或10个汉字">
+                            <h4>真实姓名</h4>
+                            <input name="user" v-model="registForm.realname" type="text" placeholder="填写你的真实姓名">
                         </div>
                         <div class="s1">
                             <h4>密码</h4>
-                            <input name="pwd" type="text" placeholder="6-30位英文、数字、符号, 区分大小写">
+                            <input name="pwd" v-model="registForm.password" type="text" placeholder="6-30位英文、数字、符号, 区分大小写">
                         </div>
-                        <div class="s1 msg-code">
-                            <h4>短信验证码</h4>
-                            <input name="msg" type="text" placeholder="填写短信验证码">
-                            <input type="button" value="获取短信验证码">
+                        <div class="s1">
+                            <h4>再次输入</h4>
+                            <input name="pwd" v-model="registForm.again" type="text" placeholder="再次输入密码">
                         </div>
                         <div class="s1">
                             <h4>邀请码<span style="color: purple">(选填)</span></h4>
-                            <input name="code" type="text" placeholder="如果有邀请码, 请填写">
+                            <input name="code" v-model="registForm.invitecode" type="text" placeholder="如果有邀请码, 请填写">
                         </div>
                         <input type="submit" class="btn" value="注&nbsp;册" @click="register">
                     </form>
@@ -65,26 +58,43 @@
 </template>
 
 <script setup>
-
-import { loginFromService } from '@/api/net';
+import { ElMessage } from 'element-plus';
+import { login as Login,regist as Register} from '@/api/net';
 import { onMounted,ref,computed } from 'vue';
+import {useRoute} from 'vue-router';
+
+const route = useRoute();
 
 const sel = ref(true);
 
+const loginForm = ref({
+    uuid:"admin",
+    password:"123123"
+});
+
+const registForm = ref({
+    realname:"孙晓祺",
+    password:"228322",
+    again:"228322",
+    invitecode:"2333"
+});
+
+
+onMounted(()=>{
+    sel.value = route.path==='/login';
+});
+
 const login = (e)=>{
-    console.log("login");
+    const {uuid,password} = loginForm.value;
+    Login(uuid,password);
     e.preventDefault();
 }
 
 const register = (e)=>{
-    console.log("register");
+    const {realname,password,again,invitecode} = registForm.value;
+    Register(realname,password,again,invitecode);
     e.preventDefault();
 }
-
-onMounted(()=>{
-    // loginFromService();
-});
-
 
 </script>
 
