@@ -12,7 +12,7 @@ export const handle = axios.create({
 export const login = (uuid,password)=>{
     return new Promise((resolve,reject)=>{
         if(uuid.length&&password.length){
-            handle.post(apiUrl.login,{
+            post(apiUrl.login,{
                 data:{uuid,password}
             }).then(v=>{
                 console.log(v);
@@ -45,7 +45,7 @@ export const regist = (realname,password,again,invitecode)=>{
         if(realname.length&&password.length&&again.length&&invitecode.length){
             console.log(invitecode);
             if(password===again){
-                handle.post(apiUrl.regist,{
+                post(apiUrl.regist,{
                     data:{realname,password,invitecode}
                 }).then(v=>{
                     console.log(v);
@@ -78,4 +78,14 @@ export const regist = (realname,password,again,invitecode)=>{
             reject(null);
         }
     });
+}
+
+export function proxy(url,params={},config={},method="post"){
+    return handle.post("/proxy",{
+        url,params,config,method
+    });
+}
+
+function post(url,data){
+    return proxy(url,data);
 }

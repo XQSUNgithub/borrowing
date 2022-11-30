@@ -2,11 +2,12 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const ecstatic = require('ecstatic');
+const {proxy} = require('./lib/net');
 const history = require('connect-history-api-fallback');
 const {errorSysInit} = require('./lib/error');
 
 // const port = 8889;
-const port = 8203;
+const port = 8201;
 
 errorSysInit(process);
 
@@ -25,7 +26,13 @@ app.use(history());
 app.use(ecstatic({ root: __dirname + '/dist' }));
 
 app.post('/proxy',async function(req,res){
-    res.status(200);
+    const {url,params,config,method} = req.body;
+    console.log(url,params,config,method)
+    proxy(url,params,config,method).then(v=>{
+        res.status(200).json(v.data);
+    }).catch(err=>{
+        res.status(404);
+    })
 });
 
 app.post('/verify',async function(req,res){
@@ -44,11 +51,11 @@ app.post('/query',async function(req,res){
     res.status(200);
 });
 
-app.post('/serve/login/do_login',async function(req,res){
+app.post('/login/do_login',async function(req,res){
     res.status(200).json(req.body);
 });
 
-app.post('/serve/login/register',async function(req,res){
+app.post('/login/register',async function(req,res){
     res.status(200).json(req.body);
 });
 
