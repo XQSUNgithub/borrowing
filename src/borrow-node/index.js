@@ -25,7 +25,7 @@ app.use(bodyParser.json())
 app.use(history());
 app.use(ecstatic({ root: __dirname + '/dist' }));
 
-app.post('/proxy',async function(req,res){
+app.post('/serve/proxy',async function(req,res){
     const {url,params,config,method} = req.body;
     console.log(url,params,config,method)
     proxy(url,params,config,method).then(v=>{

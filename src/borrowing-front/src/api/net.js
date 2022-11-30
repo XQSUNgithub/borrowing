@@ -13,7 +13,7 @@ export const login = (uuid,password)=>{
     return new Promise((resolve,reject)=>{
         if(uuid.length&&password.length){
             post(apiUrl.login,{
-                data:{uuid,password}
+                uuid,password
             }).then(v=>{
                 console.log(v);
                 ElMessage({
@@ -46,7 +46,7 @@ export const regist = (realname,password,again,invitecode)=>{
             console.log(invitecode);
             if(password===again){
                 post(apiUrl.regist,{
-                    data:{realname,password,invitecode}
+                    realname,password,invitecode
                 }).then(v=>{
                     console.log(v);
                     ElMessage({
