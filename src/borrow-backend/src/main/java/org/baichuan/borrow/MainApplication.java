@@ -1,4 +1,4 @@
-package borrow;
+package org.baichuan.borrow;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
