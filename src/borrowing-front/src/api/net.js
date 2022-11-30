@@ -16,6 +16,10 @@ export const login = (uuid,password)=>{
                 data:{uuid,password}
             }).then(v=>{
                 console.log(v);
+                ElMessage({
+                    message:"登陆成功",
+                    type:"success"
+                });
                 resolve(v);
             })
             .catch(err=>{
@@ -45,6 +49,10 @@ export const regist = (realname,password,again,invitecode)=>{
                     data:{realname,password,invitecode}
                 }).then(v=>{
                     console.log(v);
+                    ElMessage({
+                        message:"注册成功",
+                        type:"success"
+                    });
                     resolve(v);
                 })
                 .catch(err=>{
