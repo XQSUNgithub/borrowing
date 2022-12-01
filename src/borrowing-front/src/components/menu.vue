@@ -1,6 +1,6 @@
 <template>
     <el-scrollbar>
-        <div class="layout-logo-left" :style="isCollapse ? 'font-size:12px': ''" style="max-width:150px;">固定资产</div>
+        <div class="layout-logo-left" :style="isCollapse ? 'font-size:12px': ''" style="max-width:150px;">{{title}}</div>
         <el-menu
             class="el-menu-vertical-demo"
             :collapse="isCollapse"
@@ -51,6 +51,10 @@ const props = defineProps({
     menu:{
         type:Array,
         default:()=>[]
+    },
+    title:{
+        type:String,
+        default:"文物管理"
     }
 });
 

@@ -7,7 +7,7 @@
             </div>
             <div class="content-body">
                 <div class="dom" v-show="sel">
-                    <form action="#">
+                    <div action="#">
                         <div class="s1">
                             <h4>账号</h4>
                             <input name="user" v-model="loginForm.uuid" type="text" placeholder="用户名">
@@ -17,11 +17,11 @@
                             <input name="pwd" v-model="loginForm.password" type="password" placeholder="请输入密码">
                         </div>
                         <div class="s2">
-                            <input type="checkbox">
+                            <input v-model="flag" type="checkbox">
                             <span>记住密码</span>
                         </div>
-                        <input type="submit" class="btn" value="登&nbsp;录" @click="login">
-                    </form>
+                        <input type="submit" onsubmit="return false;" @click.prevent="login" class="btn" value="登&nbsp;录">
+                    </div>
                     <div class="dom-footer">
                         <div class="login-another">
                             <a href="#">找回密码</a>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="dom" v-show="!sel">
-                    <form action="#">
+                    <div action="#">
                         <div class="s1">
                             <h4>真实姓名</h4>
                             <input name="user" v-model="registForm.realname" type="text" placeholder="填写你的真实姓名">
@@ -49,8 +49,8 @@
                             <h4>邀请码<span style="color: purple">(选填)</span></h4>
                             <input name="code" v-model="registForm.invitecode" type="text" placeholder="如果有邀请码, 请填写">
                         </div>
-                        <input type="submit" class="btn" value="注&nbsp;册" @click="register">
-                    </form>
+                        <input type="submit" onsubmit="return false;" class="btn" @click.prevent="register" value="注&nbsp;册">
+                    </div>
                 </div>
             </div>
         </section>
@@ -60,16 +60,18 @@
 <script setup>
 import { ElMessage } from 'element-plus';
 import { login as Login,regist as Register} from '@/api/net';
-import { onMounted,ref,computed } from 'vue';
-import {useRoute} from 'vue-router';
+import { onMounted,ref,computed,watch } from 'vue';
+import {useRoute,useRouter} from 'vue-router';
+import {setMemory,loadMemory} from '@/api/util';
 
 const route = useRoute();
+const router = useRouter();
 
 const sel = ref(true);
 
 const loginForm = ref({
-    uuid:"admin",
-    password:"123123"
+    uuid:loadMemory("uuid")||"",
+    password:loadMemory("password")||""
 });
 
 const registForm = ref({
@@ -79,21 +81,44 @@ const registForm = ref({
     invitecode:"2333"
 });
 
+let exist = loadMemory("exist");
+const flag = computed({
+    get(){
+        return exist;
+    },
+    set(value){
+        setMemory("exist",value);
+        exist = value;
+        !value&&setMemory("password","")
+    }
+});
 
 onMounted(()=>{
     sel.value = route.path==='/login';
 });
 
 const login = (e)=>{
-    const {uuid,password} = loginForm.value;
-    Login(uuid,password);
     e.preventDefault();
+    const {uuid,password} = loginForm.value;
+    Login(uuid,password).then(v=>{
+        if(v){
+            setMemory("uuid",uuid);
+            exist&&setMemory("password",password);
+            router.push({path:"/admin"});
+        }
+    });    
+    return false;
 }
 
 const register = (e)=>{
-    const {realname,password,again,invitecode} = registForm.value;
-    Register(realname,password,again,invitecode);
     e.preventDefault();
+    const {realname,password,again,invitecode} = registForm.value;
+    Register(realname,password,again,invitecode).then(uuid=>{
+        loginForm.value.uuid = uuid;
+        loginForm.value.password = password;
+        login();
+    });
+    return false;
 }
 
 </script>
