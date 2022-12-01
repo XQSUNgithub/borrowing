@@ -49,7 +49,6 @@ export const regist = (realname,password,again,invitecode)=>{
                     const {data:{code,msg,data}} = v;
                     if(data){
                         success("注册成功");
-                        console.log(data);
                         resolve(data);//"0424585384"
                     }else{
                         error("注册失败");
@@ -78,6 +77,10 @@ export function proxy(url,params={},config={},method="post"){
     });
 }
 
-function post(url,data){
+export function post(url,data={}){
     return proxy(url,data);
+}
+
+export function get(url,data={}){
+    return proxy(url,data,{},"get");
 }

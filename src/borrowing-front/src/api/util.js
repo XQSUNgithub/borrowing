@@ -27,3 +27,8 @@ export function clearMemory(key){
     localStorage.removeItem(key);
     sessionStorage.removeItem(key);
 }
+
+
+export function filter(str,length=200){
+    return (str.length>length)?`${str.substr(0,length)}...`:str;
+}

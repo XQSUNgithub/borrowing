@@ -22,19 +22,9 @@ app.all('*', function (req, res, next){
 app.use(bodyParser.urlencoded({extended: true}) )
 app.use(bodyParser.json())
 app.use(history());
-app.use(ecstatic({ root: __dirname + '/dist' }));
+app.use(ecstatic({ root: __dirname + '/dist',cache:'no-cache',weakEtags:true}));
 
-app.post('/serve/proxy',async function(req,res){
-    const {url,params,config,method} = req.body;
-    console.log(url,params,config,method)
-    proxy(url,params,config,method).then(v=>{
-        res.status(200).json(v.data);
-    }).catch(err=>{
-        res.status(404);
-    })
-});
-
-app.post('/proxy',async function(req,res){
+app.post(/proxy/,async function(req,res){
     const {url,params,config,method} = req.body;
     console.log(url,params,config,method)
     proxy(url,params,config,method).then(v=>{

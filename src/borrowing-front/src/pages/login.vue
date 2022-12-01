@@ -62,7 +62,7 @@ import { ElMessage } from 'element-plus';
 import { login as Login,regist as Register} from '@/api/net';
 import { onMounted,ref,computed,watch } from 'vue';
 import {useRoute,useRouter} from 'vue-router';
-import {setMemory,loadMemory} from '@/api/util';
+import {setMemory,loadMemory,success} from '@/api/util';
 
 const route = useRoute();
 const router = useRouter();
@@ -98,7 +98,7 @@ onMounted(()=>{
 });
 
 const login = (e)=>{
-    e.preventDefault();
+    e&&e.preventDefault();
     const {uuid,password} = loginForm.value;
     Login(uuid,password).then(v=>{
         if(v){
@@ -116,7 +116,7 @@ const register = (e)=>{
     Register(realname,password,again,invitecode).then(uuid=>{
         loginForm.value.uuid = uuid;
         loginForm.value.password = password;
-        login();
+        login(e);
     });
     return false;
 }
