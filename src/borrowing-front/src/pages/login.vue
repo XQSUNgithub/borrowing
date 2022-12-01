@@ -99,6 +99,7 @@ onMounted(()=>{
 
 const login = (e)=>{
     e&&e.preventDefault();
+    sel.value = true;
     const {uuid,password} = loginForm.value;
     Login(uuid,password).then(v=>{
         if(v){
