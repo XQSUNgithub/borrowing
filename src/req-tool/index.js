@@ -22,7 +22,10 @@ const config = {
     timeout:5000//超时时间
 };//设置全局请求参数
 
-axios.create(config).post(url,params,headers).then(v=>{
+
+config.headers = headers;
+
+axios.create(config).post(url,params).then(v=>{
     // console.log(v); //打印整个请求响应
     const {data} = v;
     console.log(data);
