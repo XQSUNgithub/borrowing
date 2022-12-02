@@ -1,4 +1,6 @@
 package org.baichuan.borrow.service;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.baichuan.borrow.dao.UserDao;
 import org.baichuan.borrow.domin.LoginVo;
 import org.baichuan.borrow.domin.User;
@@ -25,11 +27,13 @@ public class LoginService {
 
 	public String login(LoginVo loginVo) throws Exception{
 		log.info("login");
-		User myUser= (User) userDao.getByField("uuid",loginVo.getUuid(),"user");
+		log.info((userDao.getByField("uuid",loginVo.getUuid(),"user").toJSONString()));
+		User myUser= JSON.toJavaObject(userDao.getByField("uuid",loginVo.getUuid(),"user"),User.class);
 		if(myUser==null)
 			return null;
 		//生成cookie
 		String token = JwtUtil.getJwtToken(myUser.getUuid());
+		log.info(token);
 		return token;
 	}
 	public String register(LoginVo loginVo) throws Exception {
@@ -52,7 +56,7 @@ public class LoginService {
 		newUser.setUuid(random);
 		newUser.setPassword(password);
 		newUser.setRealname(realname);
-		newUser.setState((byte) 0);
+		newUser.setState(false);
 		userDao.insertUser(newUser);
 		//生成cookie
 		//String token	 = createToken(random);

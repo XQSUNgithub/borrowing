@@ -40,7 +40,7 @@ public class LoginController {
         log.info(loginVo.getPassword()+" "+loginVo.getRealname());
         //登录
         String token=loginService.login(loginVo);
-        if(token==null) return Result.error(REQUEST_ERROR);
+        if(token==null) return Result.error(REQUEST_ERROR);//response.setStatus(403);
         return Result.success(token);
     }
 

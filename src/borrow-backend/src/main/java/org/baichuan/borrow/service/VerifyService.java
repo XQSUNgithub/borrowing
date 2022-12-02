@@ -1,6 +1,8 @@
 package org.baichuan.borrow.service;
 
 
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.baichuan.borrow.dao.UserDao;
 import org.baichuan.borrow.domin.LoginVo;
 import org.baichuan.borrow.domin.User;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.baichuan.borrow.result.CodeMsg.*;
 
+@Slf4j
 @Service
 public class VerifyService {
 
@@ -25,10 +28,11 @@ public class VerifyService {
     public Result verify(HttpServletRequest request, LoginVo loginVo){
         String token = request.getHeader("Authorization");
         String id= JwtUtil.getMemberIdByJwtToken(token);
+        log.info(id);
         if(id==null||!JwtUtil.checkToken(token)) return Result.error(TOKEN_ERROR);
-        User myUser= (User) userDao.getByField("uuid",id,"user");
+        User myUser= JSON.toJavaObject(userDao.getByField("uuid",id,"user"),User.class);
         if(myUser==null) return Result.error(USER_ERROR);
-        if(myUser.getState()!=0&&loginVo.getAction().equals("0")) return Result.error(USER_Forbidden);
+        if(myUser.getState()&&loginVo.getAction().equals("1")) return Result.error(USER_Forbidden);
         return Result.success(true);
     }
 }
