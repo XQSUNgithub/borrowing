@@ -57,7 +57,7 @@ public class LoginService {
 		newUser.setPassword(password);
 		newUser.setRealname(realname);
 		newUser.setState(false);
-		userDao.insertUser(newUser);
+		userDao.insertUser0(newUser);
 		//生成cookie
 		//String token	 = createToken(random);
 		return random;
