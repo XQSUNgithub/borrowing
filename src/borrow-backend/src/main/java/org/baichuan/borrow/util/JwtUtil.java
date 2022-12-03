@@ -4,15 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
 
+@Slf4j
 public class JwtUtil {
 
     // 过期时间： 一天
-    public static final long EXPIRE = 1000 * 60 * 10;
+    public static final long EXPIRE = 1000 * 60 * 60*24;
     // 加密密钥
     public static final String APP_SECRET = "abcdefg";
 
@@ -49,11 +51,14 @@ public class JwtUtil {
      */
     public static boolean checkToken(String jwtToken) {
         if (StringUtils.isEmpty(jwtToken)) {
+            log.info("空");
             return false;
         }
         try { //未检验过期时间
             Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
+
         } catch (Exception e) {
+            log.info("密码错误");
             e.printStackTrace();
             return false;
         }
@@ -65,12 +70,14 @@ public class JwtUtil {
      * @return
      */
     public static String getMemberIdByJwtToken(String jwtToken) {
+        log.info(jwtToken);
         if (StringUtils.isEmpty(jwtToken)) {
             return null;
         }
         Jws<Claims> claimsJws =
                 Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
         Claims claims = claimsJws.getBody();
+        log.info((String) claims.get("id"));
         return (String) claims.get("id");
     }
 
