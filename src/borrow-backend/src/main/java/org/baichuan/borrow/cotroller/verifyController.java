@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.baichuan.borrow.result.CodeMsg.*;
 
@@ -29,9 +30,9 @@ public class verifyController {
 
     @ResponseBody
     @RequestMapping
-    public Result verify(HttpServletRequest request, @RequestBody LoginVo loginVo){
+    public Result verify(HttpServletResponse response,HttpServletRequest request, @RequestBody LoginVo loginVo){
         log.info("verify");
-        Result myResult=verifyService.verify(request,loginVo);
+        Result myResult=verifyService.verify(response,request,loginVo);
         return myResult;
     }
 }

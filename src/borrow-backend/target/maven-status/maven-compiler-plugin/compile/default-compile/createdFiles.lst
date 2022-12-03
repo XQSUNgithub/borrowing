@@ -1,9 +1,17 @@
+org/baichuan/borrow/service/VerifyService.class
+org/baichuan/borrow/service/QueryService.class
 org/baichuan/borrow/dao/UserDao.class
+org/baichuan/borrow/service/InsertService.class
+org/baichuan/borrow/cotroller/verifyController.class
+org/baichuan/borrow/service/BasicImpl/UserService.class
 org/baichuan/borrow/config/WebMvcConfig.class
 org/baichuan/borrow/result/CodeMsg.class
+org/baichuan/borrow/util/JwtUtil.class
 org/baichuan/borrow/MainApplication.class
 org/baichuan/borrow/domin/LoginVo.class
 org/baichuan/borrow/domin/User.class
+org/baichuan/borrow/cotroller/BasicController.class
 org/baichuan/borrow/service/DeleteService.class
 org/baichuan/borrow/cotroller/LoginController.class
 org/baichuan/borrow/result/Result.class
+org/baichuan/borrow/service/LoginService.class

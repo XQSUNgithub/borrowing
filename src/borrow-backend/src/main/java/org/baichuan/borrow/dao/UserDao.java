@@ -22,12 +22,16 @@ public interface UserDao {
     public List<JSONObject> getList(@Param("key")String key,@Param("value")String value,@Param("table")String tablename);
 
     @Insert("insert into user(uuid,realname,password,state)values(#{uuid}, #{realname},#{password},#{state})")
-    public int insertUser(User user);
+    public int insertUser0(User user);
+
+    @Insert("insert into ${table}(${key})values(#{value})")
+    public int insertUser(@Param("table") String table,@Param("key")String key,@Param("value")String value);
 
    // public int insertCollectin(Collection collection);
 
-    @Update("update User set realname=#{realname},password=#{password},state=#{state} where uuid = #{uuid}")
-    public int editUser(User user);
+   // @Update("update User set realname=#{realname},password=#{password},state=#{state} where uuid = #{uuid}")
+    @Update("update ${table} set ${fieldName}=#{fieldValue} where ${key}=#{value}")
+    public int editUser(@Param("table") String table,@Param("fieldName") String fieldName,@Param("fieldValue") String fieldValue,@Param("key")String key,@Param("value")String value);
 
     @Delete("delete from ${table} where ${key}=#{value}")
     public int deleteLine(@Param("key")String key,@Param("value")String value,@Param("table")String tablename);

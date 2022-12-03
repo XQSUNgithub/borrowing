@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.baichuan.borrow.result.CodeMsg.REQUEST_ERROR;
 
@@ -39,50 +40,51 @@ public class BasicController {
     VerifyService verifyService;
     @RequestMapping("query")
     @ResponseBody
-    public Result query(HttpServletRequest request, @RequestBody JSONObject loginVo0){
+    public Result query(HttpServletResponse response,HttpServletRequest request, @RequestBody LoginVo loginVo) throws ClassNotFoundException {
         log.info("query");
-        log.info(loginVo0.toJSONString());
-        LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
+        /*log.info(loginVo0.toJSONString());
+        LoginVo loginVo=new LoginVo();
+        loginVo.setAction(loginVo0.getString("action"));
+        loginVo.setTableName(loginVo0.getString("tablename"));
+        log.info(loginVo0.getString("value"));
+        loginVo.setValue(JSONObject.parseObject(loginVo0.getString("value")));*/
+       // LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
         log.info(JSONObject.toJSONString(loginVo));
-        Result myResult=verifyService.verify(request,loginVo);
+        Result myResult=verifyService.verify(response,request,loginVo);
         if(myResult.getMsg()!=null) return  myResult;
         log.info("鉴权成功");
         switch (loginVo.getTableName()){
-            case "user" :return userService.query(request,loginVo);
+            case "User" :return userService.query(request,loginVo,userDao);
 
         }
         return Result.error(REQUEST_ERROR);
     }
     @RequestMapping("insert")
     @ResponseBody
-    public Result insert(HttpServletRequest request, @RequestBody JSONObject loginVo0){
+    public Result insert(HttpServletResponse response,HttpServletRequest request, @RequestBody LoginVo loginVo) throws ClassNotFoundException {
         log.info("insert");
-        log.info(loginVo0.toJSONString());
-        LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
+       // LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
         log.info(JSONObject.toJSONString(loginVo));
-        Result myResult=verifyService.verify(request,loginVo);
+        Result myResult=verifyService.verify(response,request,loginVo);
         if(myResult.getMsg()!=null) return  myResult;
         log.info("鉴权成功");
         switch (loginVo.getTableName()){
-            case "user" :return userService.insert(request,loginVo);
-
+            case "User" :return userService.insert(request,loginVo,userDao);
         }
         return Result.error(REQUEST_ERROR);
     }
 
     @RequestMapping("delete")
     @ResponseBody
-    public Result delete(HttpServletRequest request,@RequestBody JSONObject loginVo0){
+    public Result delete(HttpServletResponse response,HttpServletRequest request,@RequestBody LoginVo loginVo){
         log.info("delete");
-        log.info(loginVo0.toJSONString());
-        LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
+       // LoginVo loginVo=JSONObject.toJavaObject(loginVo0,LoginVo.class);
         log.info(JSONObject.toJSONString(loginVo));
-        Result myResult=verifyService.verify(request,loginVo);
+        Result myResult=verifyService.verify(response,request,loginVo);
         if(myResult.getMsg()!=null) return  myResult;
         log.info("鉴权成功");
         switch (loginVo.getTableName()){
-            case "user" :return userService.delete(request,loginVo);
-
+            case "User" :return userService.delete(request,loginVo,userDao);
         }
         return Result.error(REQUEST_ERROR);
     }

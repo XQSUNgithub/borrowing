@@ -4,6 +4,7 @@
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/service/BasicImpl/UserService.java
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/util/JwtUtil.java
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/result/CodeMsg.java
+/Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/service/DeleteService.java
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/domin/User.java
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/service/QueryService.java
 /Users/sunxiaoqi/Downloads/proj0/target/classes/org/baichuan/borrowing/src/borrow-backend/src/main/java/org/baichuan/borrow/result/Result.java

@@ -1,6 +1,7 @@
 package org.baichuan.borrow.domin;
 
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 
@@ -15,6 +16,8 @@ public class LoginVo {
 	private String action;
 	private String keyword;
     private String tableName;
+	private String key;
+	private JSONObject value;
 	private boolean state;
 	public boolean getState() {
 		return state;
@@ -24,4 +27,10 @@ public class LoginVo {
 		this.state = state;
 	}
 
+	public String getKeyname(String name) {
+		switch (name){
+			case "user": return "uuid";
+		}
+		return "error";
+	}
 }
