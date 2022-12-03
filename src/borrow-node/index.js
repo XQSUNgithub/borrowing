@@ -7,7 +7,7 @@ const history = require('connect-history-api-fallback');
 const {errorSysInit} = require('./lib/error');
 
 // const port = 8889;
-const port = 8200;
+const port = 8201;
 
 errorSysInit(process);
 
@@ -30,7 +30,8 @@ app.post(/proxy/,async function(req,res){
     proxy(url,params,config,method).then(v=>{
         res.status(200).json(v.data);
     }).catch(err=>{
-        res.status(404);
+        console.log(err);
+        res.status(403).json({});
     })
 });
 

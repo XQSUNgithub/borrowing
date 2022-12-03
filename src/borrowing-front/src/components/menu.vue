@@ -54,7 +54,7 @@ const props = defineProps({
     },
     title:{
         type:String,
-        default:"文物管理"
+        default:"管理系统"
     }
 });
 

@@ -6,7 +6,7 @@
                 <Fold v-show="!isCollapse"/>
             </el-icon>
             <div class="auto"></div>
-            <el-button :icon="SwitchButton" type="danger" size="small" circle/>
+            <el-button :icon="SwitchButton" @click="exit" type="danger" size="small" circle/>
         </div>
     </div>
 </template>
@@ -15,6 +15,10 @@
 import { computed  } from "vue";
 import {useStore} from "vuex";
 import { Expand, Fold,SwitchButton } from '@element-plus/icons-vue';
+import {removeKey} from "@/api/util";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const store = useStore();
 const isCollapse = computed({
@@ -26,6 +30,17 @@ const isCollapse = computed({
     }
 });
 
+const exit = ()=>{
+    window.confirm('是否退出系统?',"提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+    }).then(()=>{
+        removeKey("token");
+        router.push({path:"/"});
+    }).catch(()=>{
+
+    });
+}
 
 </script>
 

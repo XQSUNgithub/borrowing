@@ -9,6 +9,9 @@ import error from "@/pages/error/error.vue";
 import adminMenu from "@/pages/admin/admin-menu.vue";
 import adminView from "@/pages/admin/admin-view.vue";
 
+import {loadMemory} from "@/api/util";
+import {verify} from "@/api/net";
+
 const routes = [
     {
         path: "/",
@@ -39,6 +42,9 @@ const routes = [
     {
       path:'/admin',
       name:'admin',
+      meta:{
+        auth:true
+      },
       component:main,
       children:[
         {
@@ -53,15 +59,30 @@ const routes = [
     }
 ];
 
-
-
 const router = createRouter({
     history: createWebHistory(),
     routes,
   });
   
-  router.beforeEach((to,from,next)=>{
-    next();
-  })
-  
-  export default router;
+router.beforeEach((to,from,next)=>{
+  const flag = to.matched.some(item => item.meta.auth);
+  if(flag){
+    verify().then(v=>{
+      const {data:{data}} = v||{data:{}};
+      if(data)next();
+      else{
+        next({
+          path:"/login"
+        });
+      }
+    }).catch(err=>{
+      next({
+        path:"/login"
+      });
+    });
+    return;
+  }
+  next();
+})
+
+export default router;

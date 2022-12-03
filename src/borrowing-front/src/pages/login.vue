@@ -54,6 +54,8 @@
                 </div>
             </div>
         </section>
+        <a class="back" href="/">返回首页</a>
+        <!-- <div>回到首页</div> -->
     </div>
 </template>
 
@@ -131,6 +133,7 @@ const register = (e)=>{
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -148,6 +151,10 @@ input, button{
 
 a{
     color: purple;
+}
+
+.back{
+    margin-top: 50px;
 }
 
 /*主要内容*/

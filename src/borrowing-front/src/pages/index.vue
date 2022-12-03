@@ -8,18 +8,20 @@
                 :prefix-icon="Search"
             />
             <div class="tab"></div>
-            <a href="/login">登录</a>
+            <a href="/admin" v-if="cmd">进入</a>
+            <a href="/login" v-else>登录</a>
             <div style="width:20px;">|</div>
             <a href="/register">注册</a>
         </div>
         <div class="body">
             <div class="card">
                 <div class="show">
-                    <div class="ele" v-for="(item,i) in imgs" @click="(sel==i)?(sel=-1):(sel=i)">
+                    <div class="ele" v-for="(item,i) in imgs" @click="(sel==i)?(sel=-1):(sel=i)" :class="{resize:sel==i}">
                         <img :src="item.src">
-                        <div class="text" :class="{showtext:sel==i}">
+                        <!-- <div class="text" :class="{showtext:sel==i}">
                             {{filter(item.discription)}}
-                        </div>
+                        </div> -->
+                        <div class="text" :class="{showtext:sel==i}">{{filter(item.discription)}}</div>
                     </div>
                 </div>
             </div>
@@ -32,7 +34,7 @@ import { onMounted,ref,computed, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router'
 import {  Search } from '@element-plus/icons-vue'
 // import { useStore } from 'vuex';
-import {get} from '@/api/net';
+import {get,verify} from '@/api/net';
 import {res} from '@/api/config';
 import {filter} from '@/api/util';
 
@@ -42,6 +44,8 @@ const text = `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis
 const sel = ref(-1);
 const width = ref(300);
 const count = ref(4);
+
+const cmd = ref(false);
 
 function init(){
     get('http://secret.jluyyds.ltd/imgs/').then(v=>{
@@ -55,6 +59,11 @@ function init(){
     });
     window.addEventListener("resize",resize);
     resize();
+    verify().then(v=>{
+        cmd.value = true;
+    }).catch(err=>{
+        cmd.value = false;
+    })
 }
 //1 12*2 2 12*3 3 12*4
 function resize(){
@@ -80,8 +89,6 @@ onMounted(init);
 onUnmounted(()=>{
     window.removeEventListener("resize",resize);
 });
-
-
 
 </script>
 
@@ -164,6 +171,7 @@ a:hover{
 
 
 .ele{
+    position: relative;
     display:flex;
     flex-direction: column;
     align-items:center; 
@@ -183,21 +191,39 @@ a:hover{
     height: auto;
 }
 .ele>.text{
+    width: 100%;
+    position:absolute;
     white-space:normal; 
     word-break:break-all;
     overflow:hidden; 
     max-height: 0;
     transition: max-height 1s;
+    font-size: 1rem;
+    bottom: 0;
+    /* color: rgb(213, 200, 214); */
+    /* color: #000; */
+    color: #fff;
 }
 
 .ele:hover{
-    transform: scale(1.01,1.01);
+    transform: scale(1.06,1.06);
     transition-duration: .5s;
 }
 
+.resize{
+    transform: scale(1.06,1.06);
+}
+
+/* .ele:hover>img{
+    filter: blur(15px);
+} */
+
 .showtext{
-    padding: 5px;
-    max-height: 300px !important;
+    /* padding: 5px; */
+    padding: 10px;
+    background-color: rgba(0,0,0,0.7);
+    /* background-color: rgba(255,255,255,0.7); */
+    max-height: 1000px !important;
 }
 
 /* .ele:hover>.text{

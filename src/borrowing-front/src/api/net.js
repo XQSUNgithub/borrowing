@@ -1,7 +1,7 @@
 import axios from "axios";
-import {ID,success,error,setMemory,loadMemory,syncMemory} from './util';
+import {ID,success,error,setMemory,loadMemory,removeKey} from './util';
 import {proxyURL,apiUrl} from "./config";
-import querystring from "querystring";
+// import querystring from "querystring";
 
 export const handle = axios.create({
     baseURL: proxyURL,
@@ -20,7 +20,7 @@ export const login = (uuid,password)=>{
                 if(data){
                     success("登陆成功");
                     setMemory("token",data);
-                    syncMemory("token");
+                    // syncMemory("token");
                     resolve(data);//"0424585384"
                 }else{
                     error("登陆失败");
@@ -69,6 +69,58 @@ export const regist = (realname,password,again,invitecode)=>{
             reject(null);
         }
     });
+}
+
+export const verify = ()=>{
+    return new Promise((resolve,reject)=>{
+        const token = loadMemory("token");
+        if(!token){
+            reject(null);
+        }else{
+            proxy(apiUrl.verify,{
+                action:"1"
+            },{
+                headers: {
+                    'Authorization': token
+                }
+            }).then(v=>{
+                resolve(v)
+            }).catch(err=>{
+                removeKey("token");
+                reject(err);
+            });
+        }
+    });
+}
+
+export const query = (tablename,keyword="",action="1")=>{
+    const token = loadMemory("token");
+    return proxy(apiUrl.query,{
+        tablename,
+        keyword,
+        action
+    },{
+        headers: {
+            'Authorization': token
+        }
+    });
+}
+
+export const insert = (tablename,data={},action="1")=>{
+    const token = loadMemory("token");
+    return proxy(apiUrl.insert,{
+        tablename,
+        ...data,
+        action
+    },{
+        headers: {
+            'Authorization': token
+        }
+    });
+}
+
+export const remove = (tablename,key,uuid,action="1")=>{
+    
 }
 
 export function proxy(url,params={},config={},method="post"){

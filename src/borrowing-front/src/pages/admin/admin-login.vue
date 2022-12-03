@@ -1,7 +1,7 @@
 <template>
     <dataViewVue v-show="show"
         :title="title"
-        :data="data"
+        :data="tabledata"
         :action="action"
         :bar="bar"
         :label="label"
@@ -34,34 +34,23 @@
 import dataViewVue from '@/components/data-view.vue';
 import dataEditVue from '@/components/data-edit.vue';
 import { useStore } from 'vuex';
-import {ref,computed} from 'vue';
+import {ref,computed,onMounted} from 'vue';
 import { ID } from '@/api/util';
+import {query} from '@/api/net';
 
 const page = "登录管理";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
 
-const data = ref([]);
+const tabledata = ref([]);
 
 const title = ref(page);
 
 const editShow = ref(true);
 
-for(let i=0;i<11;i++){
-    const v = {
-        user_id:ID(),
-        name:"asdasd",
-        state:ID(),
-        token:"asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
-        power:"admin",
-        deadline:"12312321"
-    }
-    data.value.push(v);
-}
-
 const handle = ()=>{
-    data.value[0].user_id = ID();
+    tabledata.value[0].uuid = ID();
 }
 
 const action = ref([
@@ -91,39 +80,27 @@ const bar = ref([
 
 const label = ref([
     {
-        prop:"user_id",
+        prop:"uuid",
         label:"账户",
         width:"auto",
         fixed:true,
         fold:false
     },{
-        prop:"name",
+        prop:"realname",
         label:"姓名",
-        width:"120",
+        width:"200",
+        fixed:false,
+        fold:false
+    },{
+        prop:"password",
+        label:"密码",
+        width:"200",
         fixed:false,
         fold:false
     },{
         prop:"state",
         label:"身份",
         width:"auto",
-        fixed:false,
-        fold:false
-    },{
-        prop:"token",
-        label:"TOKEN",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"power",
-        label:"权级",
-        width:"80",
-        fixed:false,
-        fold:false
-    },{
-        prop:"deadline",
-        label:"登出时间",
-        width:"130",
         fixed:false,
         fold:false
     }
@@ -191,5 +168,19 @@ const rules = ref({
         { required: true, message: '测试', trigger: 'blur' },
     ],
 });
+
+function init(){
+    query("user",null).then(v=>{
+        const {data:{data}} = v;
+        tabledata.value = data;
+    }).catch(err=>{
+        console.log(err);
+    });
+}
+
+onMounted(()=>{
+    init();
+});
+
 
 </script>
