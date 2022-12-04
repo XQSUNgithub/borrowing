@@ -10,7 +10,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import EIcon from "@/components/EIcon.vue";
 import lazyPlugin from 'vue3-lazy'
 
-const url = `https://ts3.cn.mm.bing.net/th?id=ORMS.dc541f157031d9e2478cc5cafeedc9a1&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1&p=0`;
+const url = `http://secret.jluyyds.ltd/static/10179.png`;
 
 const app = createApp(App);
 

@@ -2,24 +2,27 @@
     <el-card v-if="show">
         <template #header>
             <div class="card-header">
-                <span>123123</span>
+                <span>{{title}}</span>
                 <div class="action">
-                    <el-button type="primary" text>添加</el-button>
-                    <el-button type="primary" text>重置</el-button>
-                    <el-button type="danger" @click="$emit('update:show', false)" text>关闭</el-button>
+                    <!-- <el-button type="primary" text>添加</el-button>
+                    <el-button type="primary" text>重置</el-button> -->
+                    <el-button v-for="item in action" :type="item.type||'primary'" @click="func(item.call)" text>{{item.label}}</el-button>
+                    <el-button type="danger" @click="$emit('update:show', false)" v-if="close" text>关闭</el-button>
                 </div>
             </div>
         </template>
         <el-form :model="model" label-width="150px" :rules="rules" ref="mydata">
-            <el-form-item v-for="item in form" :label="item.label" :prop="item.prop" :placeholder="item.placeholder">
-                <el-input v-if="item.type=='input'" v-model="model[item.prop]" :disabled="item.disabled" /> 
-                <el-select v-if="item.type=='select'" v-model="model[item.prop]" :disabled="item.disabled" >
-                    <el-option v-for="opt in item.option" :label="opt.label" :value="opt.value" />
-                </el-select> 
-            </el-form-item>
+            <template v-for="item in form" >
+                <el-form-item v-if="!(item.disabled&&adder)" :label="item.label" :prop="item.prop" :placeholder="item.placeholder">
+                    <el-input v-if="item.type=='input'" v-model="model[item.prop]" :disabled="item.disabled" /> 
+                    <el-select v-if="item.type=='select'" v-model="model[item.prop]" :disabled="item.disabled" >
+                        <el-option v-for="opt in item.option" :label="opt.label" :value="opt.value" />
+                    </el-select>
+                </el-form-item>
+            </template>
         </el-form>
         <div class="bar">
-            <el-button @click="func" text>2333</el-button>
+            <!-- <el-button @click="func" text>2333</el-button> -->
         </div>
     </el-card>
 </template>
@@ -27,23 +30,36 @@
 <script setup>
 import { ref,defineProps,computed } from 'vue';
 import { ElForm, ElFormItem, ElOption, ElSelect} from 'element-plus';
+import {error} from "@/api/util";
 
 const props = defineProps({
     show:Boolean,
     form:Array,
     data:Object,
-    rules:Object
+    rules:Object,
+    title:String,
+    action:Array,
+    adder:{
+        type:Boolean,
+        default:false
+    },
+    close:{
+        type:Boolean,
+        default:true
+    }
 });
 
 const model = computed(()=>props.data);
 
 const mydata = ref(null);
 
-const func = ()=>{
+const func = (call=()=>{})=>{ 
     mydata._value.validate(v=>v).then(v=>{
-        console.log(v);
+        call(v);
+        !v&&error("参数有误");
     }).catch(err=>{
-        console.log(err);
+        error("参数有误");
+        call(err);
     });
 }
 

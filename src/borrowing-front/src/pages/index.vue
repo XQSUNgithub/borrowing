@@ -56,7 +56,7 @@ function init(){
                 discription:res+i.name+"  "+text
             }
         });
-        i.push(...i,...i,...i,...i,...i)
+        // i.push(...i,...i,...i,...i,...i)
         imgs.value = i;
     });
     window.addEventListener("resize",resize);

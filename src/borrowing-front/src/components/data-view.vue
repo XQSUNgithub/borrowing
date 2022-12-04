@@ -5,7 +5,7 @@
                 <span>{{title}}</span>
                 <div class="action">
                     <el-input v-model="searchText" placeholder="关键词" :prefix-icon="Search"/>
-                    <el-button type="primary" v-for="item in bar" @click="item.call" text>{{item.label}}</el-button>
+                    <el-button v-for="item in bar" :type="item.type||'primary'" @click="item.call" text>{{item.label}}</el-button>
                 </div>
             </div>
         </template>
@@ -29,7 +29,7 @@
             </template>
             <el-table-column fixed="right" label="操作" width="auto">
                 <template #default="scope">
-                    <el-button link type="primary" size="small" v-for="item in action" @click="item.call(scope)">{{item.label}}</el-button>
+                    <el-button link size="small" v-for="item in action" :type="item.type||'primary'" @click="item.call(scope)">{{item.label}}</el-button>
                 </template>
             </el-table-column>
         </el-table>
