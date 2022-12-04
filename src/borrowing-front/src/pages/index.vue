@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="show">
                     <div class="ele" v-for="(item,i) in imgs" @click="(sel==i)?(sel=-1):(sel=i)" :class="{resize:sel==i}">
-                        <img :src="item.src">
+                        <img v-lazy="item.src">
                         <!-- <div class="text" :class="{showtext:sel==i}">
                             {{filter(item.discription)}}
                         </div> -->
@@ -50,12 +50,14 @@ const cmd = ref(false);
 function init(){
     get('http://secret.jluyyds.ltd/imgs/').then(v=>{
         const {data:{src}} = v;
-        imgs.value = src.map(i=>{
+        let i = src.map(i=>{
             return {
                 src:res+i.name,
                 discription:res+i.name+"  "+text
             }
         });
+        // i.push(...i,...i,...i,...i,...i)
+        imgs.value = i;
     });
     window.addEventListener("resize",resize);
     resize();

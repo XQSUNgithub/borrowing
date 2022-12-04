@@ -8,6 +8,9 @@ import 'element-plus/dist/index.css';
 import 'element-plus/es/components/icon/style/css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import EIcon from "@/components/EIcon.vue";
+import lazyPlugin from 'vue3-lazy'
+
+const url = `http://secret.jluyyds.ltd/static/10179.png`;
 
 const app = createApp(App);
 
@@ -26,6 +29,10 @@ app
     .use(ElScrollbar)
     .use(ElCard)
     .use(ElInput)
+    .use(lazyPlugin, {
+        loading: url,
+        error: url
+    })
     .component('e-icon',EIcon)
     .mount('#app');
 

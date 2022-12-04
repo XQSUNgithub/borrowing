@@ -93,10 +93,10 @@ export const verify = ()=>{
     });
 }
 
-export const query = (tablename,keyword="",action="1")=>{
+export const query = (tableName,keyword="",action="1")=>{
     const token = loadMemory("token");
     return proxy(apiUrl.query,{
-        tablename,
+        tableName,
         keyword,
         action
     },{
@@ -106,11 +106,11 @@ export const query = (tablename,keyword="",action="1")=>{
     });
 }
 
-export const insert = (tablename,data={},action="1")=>{
+export const insert = (tableName,key,value={},action="1")=>{
     const token = loadMemory("token");
     return proxy(apiUrl.insert,{
-        tablename,
-        ...data,
+        tableName,
+        key,value,
         action
     },{
         headers: {
@@ -119,8 +119,17 @@ export const insert = (tablename,data={},action="1")=>{
     });
 }
 
-export const remove = (tablename,key,uuid,action="1")=>{
-    
+export const remove = (tableName,key,value,action="1")=>{
+    const token = loadMemory("token");
+    return proxy(apiUrl.delete,{
+        tableName,
+        key,value,
+        action
+    },{
+        headers: {
+            'Authorization': token
+        }
+    });
 }
 
 export function proxy(url,params={},config={},method="post"){

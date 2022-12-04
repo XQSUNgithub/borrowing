@@ -1,5 +1,5 @@
-// export const url = "http://localhost:8201";
-export const url = "http://101.34.27.96:8201";
+export const url = "http://localhost:8201";
+// export const url = "http://101.34.27.96:8201";
 
 export const res = "http://secret.jluyyds.ltd/static/";
 
@@ -12,5 +12,6 @@ export const apiUrl = {
     verify:`${url}/verify`,
     query:`${url}/query`,
     insert:`${url}/insert`,
-    delete:`${url}/delete`
+    delete:`${url}/delete`,
+    test:`${url}/test`
 };
