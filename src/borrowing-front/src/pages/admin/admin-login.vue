@@ -34,7 +34,7 @@ import dataEditVue from '@/components/data-edit.vue';
 import { useStore } from 'vuex';
 import {ref,computed,onMounted} from 'vue';
 import { ID,error,success } from '@/api/util';
-import {query,insert,remove} from '@/api/net';
+import {query,insert,update,remove} from '@/api/net';
 
 const tableName = "User";
 const key = "uuid";
@@ -56,7 +56,7 @@ var row = null;
 const bar = ref([
     {
         label:"刷新",
-        call:()=>{console.log(1234)}
+        call:()=>{refresh();}
     },
     {
         label:"下载",
@@ -151,9 +151,10 @@ const exitBar = ref([
         label:"修改",
         call:(v)=>{
             if(v){
-                insert(tableName,key,edit.value,act).then(v=>{
+                update(tableName,key,edit.value,act).then(v=>{
                     const {data} = v;
                     if(data){
+                        console.log(data.data);
                         Object.assign(row,data.data);
                         success("修改成功");
                     }else{
@@ -175,11 +176,11 @@ const addBar = ref([
                 insert(tableName,key,addBuf.value,act).then(v=>{
                     const {data} = v;
                     if(data){
-                        const user = {
-                            uuid:data.data,
+                        const pack = {
                             ...addBuf.value
                         }
-                        tabledata.value.push(user);
+                        pack[key] = data.data||"";
+                        tabledata.value.push(pack);
                         success("创建成功");
                     }else{
                         error("创建成功");
@@ -245,13 +246,18 @@ const rules = ref({
     ],
 });
 
-function init(){
+function refresh(){
     query(tableName,null,act).then(v=>{
         const {data:{data}} = v;
+        tabledata.value.length&&success("刷新成功");
         tabledata.value = data;
     }).catch(err=>{
         console.log(err);
     });
+}
+
+function init(){
+    refresh();
 }
 
 onMounted(()=>{

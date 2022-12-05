@@ -104,10 +104,11 @@ const login = (e)=>{
     sel.value = true;
     const {uuid,password} = loginForm.value;
     Login(uuid,password).then(v=>{
-        if(v){
+        if(v!=null){
             setMemory("uuid",uuid);
             exist&&setMemory("password",password);
-            router.push({path:"/admin"});
+            if(v)router.push({path:"/user"});
+            else{router.push({path:"/admin"});}
         }
     });    
     return false;

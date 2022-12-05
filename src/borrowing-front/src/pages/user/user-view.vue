@@ -3,9 +3,7 @@
         <div class="box">
             <el-scrollbar> 
                 <div class="ctx">
-                    <adminLoginVue/>
-                    <adminAssetVue/>
-                    <adminBinVue/>
+                    <userTestVue/>
                 </div>
             </el-scrollbar>
         </div>
@@ -13,9 +11,8 @@
 </template>
 
 <script setup>
-import adminLoginVue from './admin-login.vue';
-import adminAssetVue from './admin-asset.vue';
-import adminBinVue from './admin-bin.vue';
+import userTestVue from './user-test.vue';
+
 
 </script>
 
@@ -44,7 +41,7 @@ import adminBinVue from './admin-bin.vue';
     margin-bottom: 12px !important;
 }
 
-::v-deep.ctx>.el-card:last-child{
+::v-deep .ctx>.el-card:last-child{
     margin-bottom: 0 !important;
 }
 

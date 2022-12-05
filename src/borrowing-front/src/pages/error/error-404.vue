@@ -5,6 +5,6 @@
                 <span><b>404 ERROR</b></span>
             </div>
         </template>
-        <p>界面丢失</p>
+        <a href="/"><p>界面丢失</p></a>
     </el-card>
 </template>

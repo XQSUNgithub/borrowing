@@ -12,10 +12,12 @@
         <el-table :data="buffer" style="flex:1;">
             <el-table-column type="expand">
                 <template #default="props">
-                    <!-- <div class="more">
-                        <span><b>TOKEN:</b></span>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.token}}</span><br/>
-                    </div> -->
+                    <template v-for="item in label">
+                        <div class="more" v-if="item.fold">
+                            <span><b>{{item.label}}:</b></span>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row[item.prop]||"暂无"}}</span><br/>
+                        </div>
+                    </template>
                 </template>
             </el-table-column>
             <template v-for="item in label">
