@@ -9,6 +9,9 @@ import error from "@/pages/error/error.vue";
 import adminMenu from "@/pages/admin/admin-menu.vue";
 import adminView from "@/pages/admin/admin-view.vue";
 
+import userMenu from "@/pages/user/user-menu.vue";
+import userView from "@/pages/user/user-view.vue";
+
 import {loadMemory} from "@/api/util";
 import {verify} from "@/api/net";
 
@@ -48,11 +51,29 @@ const routes = [
       component:main,
       children:[
         {
-          name:"body",
+          name:"adminBody",
           path:'',
           components:{
             menu:adminMenu,
             view:adminView
+          }
+        }
+      ]
+    },
+    {
+      path:'/user',
+      name:'user',
+      meta:{
+        auth:true
+      },
+      component:main,
+      children:[
+        {
+          name:"userBody",
+          path:'',
+          components:{
+            menu:userMenu,
+            view:userView
           }
         }
       ]
@@ -67,19 +88,37 @@ const router = createRouter({
 router.beforeEach((to,from,next)=>{
   const flag = to.matched.some(item => item.meta.auth);
   if(flag){
-    verify().then(v=>{
-      const {data:{data}} = v||{data:{}};
-      if(data)next();
-      else{
+    if(to.path=="/admin"){
+      verify("1").then(v=>{
+        const {data:{data:{uuid}}} = v;
+        if(uuid){
+          return next();
+        }else{
+          return next({
+            path:"/login"
+          });
+        }
+      }).catch(err=>{
         next({
           path:"/login"
         });
-      }
-    }).catch(err=>{
-      next({
-        path:"/login"
       });
-    });
+    }else{
+      verify("0").then(v=>{
+        const {data:{data:{uuid}}} = v;
+        if(uuid){
+          return next();
+        }else{
+          return next({
+            path:"/login"
+          });
+        }
+      }).catch(err=>{
+        next({
+          path:"/login"
+        });
+      });
+    }
     return;
   }
   next();

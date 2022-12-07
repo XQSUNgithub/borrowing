@@ -16,12 +16,11 @@ export const login = (uuid,password)=>{
             post(apiUrl.login,{
                 uuid,password
             }).then(v=>{
-                const {data:{code,msg,data}} = v;
-                if(data){
+                const {data:{code,msg,data:{token,action}}} = v;
+                if(token){
                     success("登陆成功");
-                    setMemory("token",data);
-                    // syncMemory("token");
-                    resolve(data);//"0424585384"
+                    setMemory("token",token);
+                    resolve(action);
                 }else{
                     error("登陆失败");
                     reject(null);
@@ -71,14 +70,14 @@ export const regist = (realname,password,again,invitecode)=>{
     });
 }
 
-export const verify = ()=>{
+export const verify = (action="1")=>{
     return new Promise((resolve,reject)=>{
         const token = loadMemory("token");
         if(!token){
             reject(null);
         }else{
             proxy(apiUrl.verify,{
-                action:"1"
+                action
             },{
                 headers: {
                     'Authorization': token
@@ -109,6 +108,19 @@ export const query = (tableName,keyword="",action="1")=>{
 export const insert = (tableName,key,value={},action="1")=>{
     const token = loadMemory("token");
     return proxy(apiUrl.insert,{
+        tableName,
+        key,value,
+        action
+    },{
+        headers: {
+            'Authorization': token
+        }
+    });
+}
+
+export const update = (tableName,key,value={},action="1")=>{
+    const token = loadMemory("token");
+    return proxy(apiUrl.update,{
         tableName,
         key,value,
         action

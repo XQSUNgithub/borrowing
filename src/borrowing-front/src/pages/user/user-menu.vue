@@ -1,5 +1,5 @@
 <template>
-    <menuVue :menu="menu" title="管理系统"/>
+    <menuVue :menu="menu" title="录入系统"/>
 </template>
 
 <script setup>
@@ -8,15 +8,13 @@ import menuVue from '@/components/menu.vue';
 
 const menu = ref([
         {
-            label:"信息录入",
+            label:"信息查阅",
             icon:"Monitor",
             children:[
                 {
-                    label:"登录管理"
+                    label:"矿物查阅"
                 },{
-                    label:"矿物管理"
-                },{
-                    label:"回收站"
+                    label:"借出查阅"
                 }
             ]
         },
@@ -30,12 +28,13 @@ const menu = ref([
             children:[
                 {
                     label:"审批记录"
-                },
-                {
-                    label:"出库申请"
                 }
             ]
         },
+        {
+            label:"设置",
+            icon:"Setting"
+        }
         // {
         //     label:"审批日志",
         //     icon:"BellFilled",
