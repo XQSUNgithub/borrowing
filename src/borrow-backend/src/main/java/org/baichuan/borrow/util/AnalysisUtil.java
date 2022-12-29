@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.baichuan.borrow.domin.LoginVo;
 
-import java.net.URLEncoder;
 
 @Slf4j
 public class AnalysisUtil {
