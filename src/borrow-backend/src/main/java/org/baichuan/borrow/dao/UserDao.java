@@ -21,8 +21,12 @@ public interface UserDao {
     @Select("select * from ${table} where ${key} like concat('%',#{value},'%')") //拿出
     public List<JSONObject> getList(@Param("key")String key,@Param("value")String value,@Param("table")String tablename);
 
+    @Select("select max(directid) from Directory where libid=#{value}" )
+    public String getMax(@Param("value") String value);
+
     @Insert("insert into user(uuid,realname,password,state)values(#{uuid}, #{realname},#{password},#{state})")
     public int insertUser0(User user);
+
 
     @Insert("insert into ${table}(${key})values(#{value})")
     public int insertUser(@Param("table") String table,@Param("key")String key,@Param("value")String value);

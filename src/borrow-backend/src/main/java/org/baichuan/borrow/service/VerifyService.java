@@ -26,24 +26,28 @@ public class VerifyService {
     UserDao userDao;
 
 
-    public Result verify(HttpServletResponse response,HttpServletRequest request, LoginVo loginVo){
+    public Result verify(HttpServletResponse response,HttpServletRequest request, LoginVo loginVo)throws Exception{
         String token = request.getHeader("Authorization");
-        String id= JwtUtil.getMemberIdByJwtToken(token);
-        log.info(id);
-        if(id==null||!JwtUtil.checkToken(token)) {
+        if(JwtUtil.checkToken(token)) {
             response.setStatus(403);
             return Result.error(TOKEN_ERROR);
         }
+        String id= JwtUtil.getMemberIdByJwtToken(token);
+        if(id==null){
+            response.setStatus(403);
+            return Result.error(TOKEN_ERROR);
+        }
+        log.info(id);
         User myUser= JSON.toJavaObject(userDao.getByField("uuid",id,"user"),User.class);
         if(myUser==null) {
             response.setStatus(403);
             return Result.error(USER_ERROR);
         }
         //检验action为null的情况
-        if(myUser.getState()&&loginVo.getAction()!=null&&loginVo.getAction().length()!=0&&loginVo.getAction().equals("1")) {
+       /* if(myUser.getState()&&loginVo.getAction()!=null&&loginVo.getAction().length()!=0&&loginVo.getAction().equals("1")) {
             response.setStatus(403);
             return Result.error(USER_Forbidden);
-        }
-        return Result.success(true);
+        }*/
+        return Result.success(myUser);
     }
 }

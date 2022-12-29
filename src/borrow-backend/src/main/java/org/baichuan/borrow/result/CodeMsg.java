@@ -15,6 +15,7 @@ public class CodeMsg {
 	public static CodeMsg TOKEN_ERROR = new CodeMsg(400, "登录失效，请重新登录");
 	public static CodeMsg USER_ERROR = new CodeMsg(401, "用户不存在");
 	public static CodeMsg USER_Forbidden = new CodeMsg(401, "该用户无权限");
+
 	//public static CodeMsg MOBILE_EMPTY = new CodeMsg(500212, "手机号不能为空");
 	//public static CodeMsg MOBILE_ERROR = new CodeMsg(500213, "手机号格式错误");
 	//public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500214, "手机号不存在");

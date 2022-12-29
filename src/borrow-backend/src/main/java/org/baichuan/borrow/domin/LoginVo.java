@@ -18,6 +18,7 @@ public class LoginVo {
     private String tableName;
 	private String key;
 	private JSONObject value;
+	private String module;
 	private boolean state;
 	public boolean getState() {
 		return state;

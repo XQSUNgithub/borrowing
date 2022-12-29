@@ -17,7 +17,7 @@ import static org.baichuan.borrow.result.CodeMsg.USER_ERROR;
 public interface DeleteService {
 
 
-    public default Result delete(HttpServletRequest request, LoginVo loginVo, UserDao userDao) {
+    public default Result delete(HttpServletRequest request, LoginVo loginVo, UserDao userDao) throws ClassNotFoundException {
         if(loginVo.getValue().getString(loginVo.getKey())!=null){
             System.out.println(JSON.toJSONString(loginVo));
             userDao.deleteLine(loginVo.getKey(),loginVo.getValue().getString(loginVo.getKey()), loginVo.getTableName());

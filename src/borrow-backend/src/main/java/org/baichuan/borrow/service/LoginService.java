@@ -25,7 +25,7 @@ public class LoginService {
 	UserDao userDao;
 
 
-	public String login(LoginVo loginVo) throws Exception{
+	public JSONObject login(LoginVo loginVo) throws Exception{
 		log.info("login");
 		log.info((userDao.getByField("uuid",loginVo.getUuid(),"user").toJSONString()));
 		User myUser= JSON.toJavaObject(userDao.getByField("uuid",loginVo.getUuid(),"user"),User.class);
@@ -34,7 +34,10 @@ public class LoginService {
 		//生成cookie
 		String token = JwtUtil.getJwtToken(myUser.getUuid());
 		log.info(token);
-		return token;
+		JSONObject newObject=new JSONObject();
+		newObject.put("token",token);
+		newObject.put("action",myUser.getState());
+		return newObject;
 	}
 	public String register(LoginVo loginVo) throws Exception {
          log.info("register");
@@ -56,7 +59,7 @@ public class LoginService {
 		newUser.setUuid(random);
 		newUser.setPassword(password);
 		newUser.setRealname(realname);
-		newUser.setState(false);
+		newUser.setState(true);
 		userDao.insertUser0(newUser);
 		//生成cookie
 		//String token	 = createToken(random);
