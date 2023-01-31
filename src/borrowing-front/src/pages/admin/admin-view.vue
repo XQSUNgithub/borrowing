@@ -5,7 +5,10 @@
                 <div class="ctx">
                     <adminLoginVue/>
                     <adminAssetVue/>
+                    <adminIOVue/>
                     <adminBinVue/>
+                    <adminRecordVue/>
+                    <adminProcessVue/>
                 </div>
             </el-scrollbar>
         </div>
@@ -15,7 +18,20 @@
 <script setup>
 import adminLoginVue from './admin-login.vue';
 import adminAssetVue from './admin-asset.vue';
+import adminIOVue from './admin-io.vue';
 import adminBinVue from './admin-bin.vue';
+import adminRecordVue from './admin-record.vue';
+import adminProcessVue from './admin-process.vue';
+
+import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
+
+onMounted(()=>{
+    store.commit("setState",["menuSelected","账户管理"]);
+    store.commit("setState",["hint",[]]);
+});
+
 
 </script>
 

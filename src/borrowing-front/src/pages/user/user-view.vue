@@ -3,7 +3,10 @@
         <div class="box">
             <el-scrollbar> 
                 <div class="ctx">
-                    <userTestVue/>
+                    <userAssetVue/>
+                    <userBorrowVue/>
+                    <userProcessVue/>
+                    <!-- <userTestVue/> -->
                 </div>
             </el-scrollbar>
         </div>
@@ -11,7 +14,17 @@
 </template>
 
 <script setup>
-import userTestVue from './user-test.vue';
+// import userTestVue from './user-test.vue';
+import userAssetVue from './user-asset.vue';
+import userBorrowVue from './user-borrow.vue';
+import userProcessVue from './user-process.vue';
+import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
+
+onMounted(()=>{
+    store.commit("setState",["menuSelected","矿物查阅"]);
+});
 
 
 </script>

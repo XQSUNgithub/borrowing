@@ -3,6 +3,20 @@
 </template>
 
 <script setup>
+import {provide} from 'vue';
+
+const data = {};
+
+provide("events",()=>{
+  return {
+    read(key){
+      return data[key];
+    },
+    write(key,value){
+      data[key] = value;
+    }
+  }
+});
 
 </script>
 

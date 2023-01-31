@@ -9,22 +9,26 @@
             text-color="#C4CED4"
             :default-active="selected"
         >
-        <template v-for="(item,index) in menu">
+        <template v-for="(item,index) in menus">
             <template v-if="item.children">
                 <el-sub-menu :index="item.label" :key="index">
                     <template #title>
                         <e-icon :type="item.icon"></e-icon>
-                        <span>{{item.label}}</span>
+                        <span :class="{'red-point':item.flag}">{{item.label}}</span>
                     </template>
                     <el-menu-item-group >
-                        <el-menu-item v-for="(val,i) in item.children" :index="val.label" @click="call(val)">{{val.label}}</el-menu-item>
+                        <el-menu-item v-for="(val,i) in item.children" :index="val.label" @click="call(val)">
+                            <span :class="{'red-point':val.flag}">{{val.label}}</span>
+                        </el-menu-item>
                     </el-menu-item-group>
                 </el-sub-menu>
             </template>
             <template v-else>
                 <el-menu-item :index="item.label" @click="call(item)">
                     <e-icon :type="item.icon"></e-icon>
-                    <template #title>{{item.label}}</template>
+                    <template #title>
+                        <span :class="{'red-point':item.flag}">{{item.label}}</span>
+                    </template>
                 </el-menu-item>
             </template>
         </template>
@@ -36,7 +40,7 @@
 import { 
     ElMenu,ElSubMenu,ElMenuItemGroup,ElMenuItem
 } from 'element-plus';
-import { computed,defineProps } from 'vue';
+import { computed,defineProps, provide } from 'vue';
 import { useStore } from 'vuex';
 const store = useStore();
 
@@ -56,6 +60,36 @@ const props = defineProps({
         type:String,
         default:"管理系统"
     }
+});
+
+const hint = computed(()=>store.state.hint);
+
+const menus = computed(()=>{
+    const res = [];
+    function dfs(src,map={}){
+        let flag = false;
+        if(src){
+            map.icon = src.icon;
+            map.label = src.label;
+            flag||=hint.value.includes(map.label);
+            if(src.children){
+                map.children = [];
+                for(let item of src.children){
+                    let c = {};
+                    flag = dfs(item,c)||flag;
+                    map.children.push(c);
+                }
+            }
+        }
+        map.flag = flag;
+        return flag;
+    }
+    props.menu.forEach(item=>{
+        const c = {};
+        dfs(item,c);
+        res.push(c);
+    });
+    return res;
 });
 
 const call = e=>{
@@ -95,6 +129,20 @@ const call = e=>{
 
 .el-scrollbar{
     width: 100%;
+}
+
+.red-point{
+    position: relative;
+}
+
+.red-point::before{
+    content: " ";
+    border: 4px solid red;/*设置红色*/
+    border-radius:1rem;/*设置圆角*/
+    position: absolute;
+    right: 0%;
+    margin-right: -15px;
+    margin-top: 15px;
 }
 
 </style>

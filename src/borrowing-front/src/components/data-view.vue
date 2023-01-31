@@ -5,19 +5,21 @@
                 <span>{{title}}</span>
                 <div class="action">
                     <el-input v-model="searchText" placeholder="关键词" :prefix-icon="Search"/>
-                    <el-button v-for="item in bar" :type="item.type||'primary'" @click="item.call" text>{{item.label}}</el-button>
+                    <el-button :type="item.type||'primary'" v-for="item in bar" @click="item.call" text>{{item.label}}</el-button>
                 </div>
             </div>
         </template>
         <el-table :data="buffer" style="flex:1;">
             <el-table-column type="expand">
                 <template #default="props">
-                    <template v-for="item in label">
-                        <div class="more" v-if="item.fold">
-                            <span><b>{{item.label}}:</b></span>
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row[item.prop]||"暂无"}}</span><br/>
-                        </div>
-                    </template>
+                    <div class="more">
+                        <template v-for="item in label">
+                            <template v-if="item.fold">
+                                <span><b>{{item.label}}:</b></span>
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row[item.prop]||"暂无"}}</span><br/>
+                            </template>
+                        </template>
+                    </div>
                 </template>
             </el-table-column>
             <template v-for="item in label">
@@ -29,9 +31,14 @@
                     :width="item.width"
                 />
             </template>
-            <el-table-column fixed="right" label="操作" width="auto">
+            <el-table-column fixed="right" label="操作" width="auto" v-if="action.length">
                 <template #default="scope">
-                    <el-button link size="small" v-for="item in action" :type="item.type||'primary'" @click="item.call(scope)">{{item.label}}</el-button>
+                    <template v-for="item in action">
+                        <el-button link :type="item.type||'primary'" size="small" 
+                            @click="item.call(scope,pageSize*(index-1))">{{item.label}}
+                        </el-button>
+                        <div></div>
+                    </template>
                 </template>
             </el-table-column>
         </el-table>
@@ -42,7 +49,7 @@
                 small
                 background
                 layout="prev, pager, next"
-                hide-on-single-page
+                :hide-on-single-page="false"
                 :total="length"
                 class="mt-4"
             />

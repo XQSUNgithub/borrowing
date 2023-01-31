@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ID,success,error,setMemory,loadMemory,removeKey} from './util';
+import {ID,success,error,setMemory,loadMemory,removeKey,setInfo,getInfo} from './util';
 import {proxyURL,apiUrl} from "./config";
 // import querystring from "querystring";
 
@@ -83,6 +83,10 @@ export const verify = (action="1")=>{
                     'Authorization': token
                 }
             }).then(v=>{
+                const {data:{data}} = v;
+                if(data){
+                    setInfo(data);
+                }
                 resolve(v)
             }).catch(err=>{
                 removeKey("token");
@@ -92,11 +96,11 @@ export const verify = (action="1")=>{
     });
 }
 
-export const query = (tableName,keyword="",action="1")=>{
+export const query = (tableName,keyword="",module,action="1",value={})=>{
     const token = loadMemory("token");
     return proxy(apiUrl.query,{
         tableName,
-        keyword,
+        keyword,module,value,
         action
     },{
         headers: {
@@ -144,6 +148,19 @@ export const remove = (tableName,key,value,action="1")=>{
     });
 }
 
+export const borrow = (tableName,key,value,action="1")=>{
+    const token = loadMemory("token");
+    return proxy(apiUrl.borrow,{
+        tableName,
+        key,value,
+        action
+    },{
+        headers: {
+            'Authorization': token
+        }
+    });
+}
+
 export function proxy(url,params={},config={},method="post"){
     return handle.post("/proxy",{
         url,params,config,method
@@ -157,3 +174,4 @@ export function post(url,data={}){
 export function get(url,data={}){
     return proxy(url,data,{},"get");
 }
+

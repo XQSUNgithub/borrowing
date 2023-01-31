@@ -6,24 +6,14 @@
         :bar="bar"
         :label="label"
     />
-    <dataEditVue
+    <dataBoxVue
         v-model:show="editShow"
         v-show="show"
         :form="from"
         v-model:data="edit"
         :rules="rules"
         :action="exitBar"
-        title="记录编辑"
-    />
-    <dataEditVue
-        :show="true"
-        v-show="show"
-        :form="addform"
-        v-model:data="addBuf"
-        :rules="rules"
-        :action="addBar"
-        title="记录创建"
-        :adder="true"
+        title="出库申请"
         :close="false"
     />
 </template>
@@ -31,16 +21,19 @@
 <script setup>
 import dataViewVue from '@/components/data-view.vue';
 import dataEditVue from '@/components/data-edit.vue';
+import dataBoxVue from '@/components/data-box.vue';
 import { useStore } from 'vuex';
 import {ref,computed,onMounted} from 'vue';
-import { ID,error,success,sure } from '@/api/util';
-import {query,insert,update,remove} from '@/api/net';
+import { ID,error,success,sure,getInfo } from '@/api/util';
+import {query,insert,borrow} from '@/api/net';
 
 const tableName = "Collection";
+const borrowName = 'Record';
+const borrowKey = "id";
 const key = "cid";
-const act = "1";
+const act = "0";
 
-const page = "矿物管理";
+const page = "矿物查阅";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
@@ -100,7 +93,7 @@ const label = ref([
         label:"录入者",
         width:"auto",
         fixed:false,
-        fold:false
+        fold:true
     },{
         prop:"providetime",
         label:"提供时间",
@@ -118,7 +111,7 @@ const label = ref([
         label:"产地",
         width:"200",
         fixed:false,
-        fold:false
+        fold:true
     },{
         prop:"purpose",
         label:"用途",
@@ -130,7 +123,7 @@ const label = ref([
         label:"库存位置号",
         width:"auto",
         fixed:false,
-        fold:false
+        fold:true
     },{
         prop:"access",
         label:"获取途径",
@@ -141,74 +134,25 @@ const label = ref([
 ]);
 
 const codes = [
-    {
+    {    
+        type:"input",
+        prop:"cid",
+        label:"编号",
+        disabled:true
+    },{
         type:"input",
         prop:"name",
         label:"名录",
-        disabled:false,
-        need:true,
+        disabled:true
     },{
-        type:"input",
-        prop:"provider",
-        label:"标本提供者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"gatherer",
-        label:"采集者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"donor",
-        label:"捐赠者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"recorder",
-        label:"录入者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"providetime",
-        label:"提供时间",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"num",
-        label:"标本数量",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"source",
-        label:"产地",
-        disabled:false
-    },{
-        type:"input",
+        type:"textarea",
         prop:"purpose",
         label:"用途",
-        disabled:false
-    },{
-        type:"input",
-        prop:"location",
-        label:"库存位置号",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"access",
-        label:"获取途径",
         disabled:false
     }
 ];
 
-const from = ref([{    
-        type:"input",
-        prop:"cid",
-        label:"编号",
-        disabled:false
-    },...codes]);
+const from = ref(codes);
 
 const addform = ref(codes);
 
@@ -225,20 +169,36 @@ const addBuf = ref({
 
 const exitBar = ref([
     {
-        label:"修改",
+        label:"递交申请",
+        type:"success",
         call:(v)=>{
             if(v){
-                update(tableName,key,edit.value,act).then(v=>{
-                    const {data} = v;
-                    if(data&&data.data){
-                        Object.assign(row,data.data);
-                        success("修改成功");
-                    }else{
-                        error("修改失败");
-                    }
-                }).catch(err=>{
-                    console.log(err);
+                const {cid} = edit.value;
+                const uuid = getInfo("uuid");
+                const type = '借阅';
+                sure(`是否递交申请?`)(()=>{
+                    borrow(borrowName,borrowKey,{
+                        cid,uuid,type
+                    },act).then(v=>{
+                        console.log(v);
+                        success("申请成功");
+                    }).catch(err=>{
+                        console.log(err);
+                        error("申请失败");
+                    })
+                    editShow.value = false;
                 });
+                // update(tableName,key,edit.value,act).then(v=>{
+                //     const {data} = v;
+                //     if(data&&data.data){
+                //         Object.assign(row,data.data);
+                //         success("修改成功");
+                //     }else{
+                //         error("修改失败");
+                //     }
+                // }).catch(err=>{
+                //     console.log(err);
+                // });
             }
         }
     }
@@ -260,11 +220,10 @@ const addBar = ref([
                             tabledata.value.push(pack);
                             success("创建成功");
                         }else{
-                            error("创建失败");
+                            error("创建成功");
                         }
                     }).catch(err=>{
-                        console.log(err);
-                        error("创建失败");
+
                     });
                 });
             }
@@ -274,36 +233,36 @@ const addBar = ref([
 
 const action = ref([
     {
-        label:"编辑",
+        label:"申请借出",
         call:v=>{
             Object.assign(edit.value,v.row);
             row = v.row;
             editShow.value = true;
         }
     },
-    {
-        label:"删除",
-        type:"danger",
-        call:v=>{
-            const row = v.row;
-            const {cid} = row;
-            row.destroyed = "yes";
-            sure(`是否删除记录[${cid}]?`)(()=>{
-                remove(tableName,key,row,act).then(v=>{
-                    const {data} = v;
-                    if(data.data){
-                        console.log(data.data);
-                        tabledata.value = tabledata.value.filter(v=>v.cid!=cid);
-                        success("删除成功");
-                    }else{
-                        error("删除失败");
-                    }
-                }).catch(err=>{
-                    console.log(err);
-                });
-            });
-        }
-    }
+    // {
+    //     label:"删除",
+    //     type:"danger",
+    //     call:v=>{
+    //         const row = v.row;
+    //         const {cid} = row;
+    //         row.destroyed = "yes";
+    //         sure(`是否删除记录[${cid}]?`)(()=>{
+    //             remove(tableName,key,row,act).then(v=>{
+    //                 const {data} = v;
+    //                 if(data.data){
+    //                     console.log(data.data);
+    //                     tabledata.value = tabledata.value.filter(v=>v.cid!=cid);
+    //                     success("删除成功");
+    //                 }else{
+    //                     error("删除失败");
+    //                 }
+    //             }).catch(err=>{
+    //                 console.log(err);
+    //             });
+    //         });
+    //     }
+    // }
 ]);
 
 
