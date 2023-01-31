@@ -1,9 +1,6 @@
 package org.baichuan.borrow.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -14,7 +11,8 @@ import java.util.Date;
 public class JwtUtil {
 
     // 过期时间： 一天
-    public static final long EXPIRE = 1000 * 60 * 60*24;
+    //public static final long EXPIRE = 1000 * 60 * 60*24;
+    public static final long EXPIRE =1000*60*60*5*24;
     // 加密密钥
     public static final String APP_SECRET = "abcdefg";
 
@@ -49,36 +47,55 @@ public class JwtUtil {
      * @param jwtToken
      * @return
      */
-    public static boolean checkToken(String jwtToken) {
+    public static boolean checkToken(String jwtToken)throws Exception {
         if (StringUtils.isEmpty(jwtToken)) {
             log.info("空");
-            return false;
-        }
+            return true;
+        }/*
         try { //未检验过期时间
+            Claims claims =
             Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
-
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
             log.info("密码错误");
             e.printStackTrace();
             return false;
+        }*/
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(APP_SECRET) // 设置标识名
+                    .parseClaimsJws(jwtToken)  //解析token
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            claims = e.getClaims();
         }
-        return true;
+        Date expiration = claims.getExpiration();
+        log.info(String.valueOf(new Date(System.currentTimeMillis()).after(expiration)));
+        return new Date(System.currentTimeMillis()).after(expiration); //false时不过期
     }
 
     /**
      * 根据token获取会员id，根据用户 id 查询数据库获取用户基本信息
      * @return
      */
-    public static String getMemberIdByJwtToken(String jwtToken) {
+    public static String getMemberIdByJwtToken(String jwtToken)throws Exception {
         log.info(jwtToken);
         if (StringUtils.isEmpty(jwtToken)) {
             return null;
         }
-        Jws<Claims> claimsJws =
-                Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
-        Claims claims = claimsJws.getBody();
-        log.info((String) claims.get("id"));
-        return (String) claims.get("id");
+        log.info("getMemberIdByJwtToken");
+        try {
+            Jws<Claims> claimsJws =
+                    Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
+            log.info("claimsJws");
+            Claims claims = claimsJws.getBody();
+            log.info("getBody");
+            log.info((String) claims.get("id"));
+            return (String) claims.get("id");
+        }catch(Exception e){
+            return null;
+        }
+
     }
 
 }

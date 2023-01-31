@@ -1,5 +1,6 @@
 package org.baichuan.borrow.cotroller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.baichuan.borrow.domin.LoginVo;
 import org.baichuan.borrow.result.Result;
 import org.baichuan.borrow.service.LoginService;
@@ -36,12 +37,14 @@ public class LoginController {
     @RequestMapping(value="/do_login")
     @ResponseBody
     //返回类与前端关系？
-    public Result<String> doLogin(HttpServletResponse response, @RequestBody LoginVo loginVo) throws Exception {
+    public Result<JSONObject> doLogin(HttpServletResponse response, @RequestBody LoginVo loginVo) throws Exception {
         log.info(loginVo.getPassword()+" "+loginVo.getRealname());
         //登录
-        String token=loginService.login(loginVo);
-        if(token==null) return Result.error(REQUEST_ERROR);//response.setStatus(403);
-        return Result.success(token);
+        JSONObject res=loginService.login(loginVo);
+        log.info(res+"登陆后");
+        if(res==null) return Result.error(REQUEST_ERROR);//response.setStatus(403);
+
+        return Result.success(res);
     }
 
     @RequestMapping("/to_login")

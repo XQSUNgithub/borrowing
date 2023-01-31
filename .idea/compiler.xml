@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="borrow" target="8" />
+      <module name="borrowing" target="8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

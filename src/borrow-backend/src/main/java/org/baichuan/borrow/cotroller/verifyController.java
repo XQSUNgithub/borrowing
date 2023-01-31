@@ -30,7 +30,7 @@ public class verifyController {
 
     @ResponseBody
     @RequestMapping
-    public Result verify(HttpServletResponse response,HttpServletRequest request, @RequestBody LoginVo loginVo){
+    public Result verify(HttpServletResponse response,HttpServletRequest request, @RequestBody LoginVo loginVo) throws Exception {
         log.info("verify");
         Result myResult=verifyService.verify(response,request,loginVo);
         return myResult;
