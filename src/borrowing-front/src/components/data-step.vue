@@ -23,10 +23,10 @@
       </el-steps>
     </div>
     <div class="action">
-      <template v-if="true">
-        <el-button type="success" :icon="Check" text circle @click="next">确认</el-button>
+      <template v-if="display">
+        <el-button type="success" :icon="Check" text circle @click="handle('yes')">确认</el-button>
         <div></div>
-        <el-button type="danger" :icon="Close" text circle>拒绝</el-button>
+        <el-button type="danger" :icon="Close" text circle @click="handle('no')">拒绝</el-button>
       </template>
     </div>
   </div>
@@ -35,19 +35,41 @@
 <script setup>
 import { ElDivider, ElStep, ElSteps, ElTooltip } from 'element-plus';
 import { Bell, PieChart, Finished, Check, Close, Flag } from '@element-plus/icons-vue'
-import { ref,computed } from 'vue'
+import { ref,computed } from 'vue';
+import {update} from '@/api/net';
+import { ID,error,success,sure } from '@/api/util';
 
 const props = defineProps({
-  process:Object
+  process:Object,
+  act:{
+    type:String,
+    default:"1"
+  }
 });
 
+const emit = defineEmits();
+
+const tableName = "Record";
+const key = "id";
+
+const listen = computed(()=>props.process||{});
+
+const state = computed(()=>listen.value.type||"异常");
+
 const active = computed(()=>{
-  const {time0,time1,time2} = listen.value; 
-  if(time2)return 4;
-  if(time1)return 2;
-  if(time0)return 1;
-  return -1;
+  console.log(listen.value);
+  const {type} = listen.value; 
+  switch(type){
+    case "借阅":return 1;
+    case "已借":return 2;
+    case "归还":return 3;
+    case "已还":return 4;
+    case "结束":return 5;
+    default:return -1;
+  }
 });
+
+const display = computed(()=>["借阅","归还"].includes(state.value)&&props.act=="1");
 
 const header = computed(()=>{
   const {id,time0,time1,time2} = props.process||{};
@@ -64,21 +86,40 @@ const detailBack = computed(()=>{
   return `用户ID: ${uuid}<br/>矿物ID: ${cid}<br/>时间戳: ${time2}`
 });
 
-const listen = computed(()=>props.process||{});
 
-const status = computed(()=>{
-  const {time0,time1,time2} = listen.value; 
-  console.log(233);
-  if(time2)return active.value = 4;
-  if(time1)return active.value = 2;
-  if(time0)return active.value = 1;
-});
 
-const next = () => {
-  setTimeout(() => {
-    if (active.value++ > 3) active.value = 1;
-  }, 500);
+// const next = () => {
+//   setTimeout(() => {
+//     if (active.value++ > 3) active.value = 1;
+//   }, 500);
+// }
+
+const handle = (type)=>{
+  type=="yes"&&sure(`确认同意?`)(async ()=>{
+    let type = "";
+    switch(state.value){
+      case "借阅":type="已借";break;
+      case "已借":type="归还";break;
+      case "归还":type="已还";break;
+      case "已还":type="结束";break;
+      default:return;
+    }
+    const {id} = listen.value;
+    const {data} = await update(tableName,key,{id,type},props.act||"0");
+    if(data&&data.data){
+      emit("resolve",data.data);
+      success("审批通过");
+    }else{
+      emit("error",data.data);
+      error("审批异常");
+    }
+  });
+  type=="no"&&sure(`确认拒绝?`)(()=>{
+    emit("reject",data.data);
+    error("审批拒绝");
+  });
 }
+
 </script>
 
 <style scoped>

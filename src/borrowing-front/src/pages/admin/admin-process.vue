@@ -1,6 +1,6 @@
 <template>
     <dataViewVue v-show="show"
-        :title="title"
+        title="审批表单"
         :data="tabledata"
         :action="action"
         :bar="bar"
@@ -8,7 +8,7 @@
     />
     <dataStepsVue
         v-show="show"
-        :title="title"
+        title="审批详情"
         :data="tabledata"
         :action="action"
         :bar="bar"

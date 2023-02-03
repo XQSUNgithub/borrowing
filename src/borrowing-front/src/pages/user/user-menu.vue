@@ -14,7 +14,7 @@ const menu = ref([
                 {
                     label:"矿物查阅"
                 },{
-                    label:"借还查阅"
+                    label:"借出查阅"
                 }
             ]
         },
