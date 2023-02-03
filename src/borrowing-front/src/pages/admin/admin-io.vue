@@ -6,26 +6,6 @@
         :bar="bar"
         :label="label"
     />
-    <dataEditVue
-        v-model:show="editShow"
-        v-show="show"
-        :form="from"
-        v-model:data="edit"
-        :rules="rules"
-        :action="exitBar"
-        title="记录编辑"
-    />
-    <dataEditVue
-        :show="true"
-        v-show="show"
-        :form="addform"
-        v-model:data="addBuf"
-        :rules="rules"
-        :action="addBar"
-        title="记录创建"
-        :adder="true"
-        :close="false"
-    />
 </template>
 
 <script setup>
@@ -36,11 +16,11 @@ import {ref,computed,onMounted} from 'vue';
 import { ID,error,success,sure } from '@/api/util';
 import {query,insert,update,remove} from '@/api/net';
 
-const tableName = "Collection";
+const tableName = "Record module:record";
 const key = "cid";
 const act = "1";
 
-const page = "矿物管理";
+const page = "归还记录";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
@@ -66,139 +46,59 @@ const bar = ref([
 
 const label = ref([
     {
+        prop:"id",
+        label:"审批单号",
+        width:"auto",
+        fixed:true,
+        fold:false
+    },{
         prop:"cid",
-        label:"编号",
-        width:"auto",
-        fixed:true,
-        fold:false
-    },{
-        prop:"name",
-        label:"名录",
-        width:"auto",
-        fixed:true,
-        fold:false
-    },{
-        prop:"provider",
-        label:"标本提供者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"gatherer",
-        label:"采集者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"donor",
-        label:"捐赠者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"recorder",
-        label:"录入者",
+        label:"矿物编号",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"providetime",
-        label:"提供时间",
+        prop:"time0",
+        label:"time0",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"num",
-        label:"标本数量",
+        prop:"time1",
+        label:"time1",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"source",
-        label:"产地",
-        width:"200",
-        fixed:false,
-        fold:false
-    },{
-        prop:"purpose",
-        label:"用途",
-        width:"200",
-        fixed:false,
-        fold:true
-    },{
-        prop:"location",
-        label:"库存位置号",
+        prop:"time2",
+        label:"time2",
         width:"auto",
         fixed:false,
         fold:false
-    },{
-        prop:"access",
-        label:"获取途径",
-        width:"auto",
-        fixed:false,
-        fold:true
     }
 ]);
 
 const codes = [
     {
         type:"input",
-        prop:"name",
-        label:"名录",
+        prop:"cid",
+        label:"矿物编号",
         disabled:false,
-        need:true,
+        need:true
     },{
         type:"input",
-        prop:"provider",
-        label:"标本提供者",
+        prop:"time0",
+        label:"time0",
         disabled:false
     },{
         type:"input",
-        prop:"gatherer",
-        label:"采集者",
+        prop:"time1",
+        label:"time0",
         disabled:false
     },{
         type:"input",
-        prop:"donor",
-        label:"捐赠者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"recorder",
-        label:"录入者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"providetime",
-        label:"提供时间",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"num",
-        label:"标本数量",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"source",
-        label:"产地",
-        disabled:false
-    },{
-        type:"input",
-        prop:"purpose",
-        label:"用途",
-        disabled:false
-    },{
-        type:"input",
-        prop:"location",
-        label:"库存位置号",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"access",
-        label:"获取途径",
+        prop:"time2",
+        label:"time0",
         disabled:false
     }
 ];
@@ -260,11 +160,10 @@ const addBar = ref([
                             tabledata.value.push(pack);
                             success("创建成功");
                         }else{
-                            error("创建失败");
+                            error("创建成功");
                         }
                     }).catch(err=>{
-                        console.log(err);
-                        error("创建失败");
+
                     });
                 });
             }
@@ -273,14 +172,14 @@ const addBar = ref([
 ]);
 
 const action = ref([
-    {
-        label:"编辑",
-        call:v=>{
-            Object.assign(edit.value,v.row);
-            row = v.row;
-            editShow.value = true;
-        }
-    },
+    // {
+    //     label:"编辑",
+    //     call:v=>{
+    //         Object.assign(edit.value,v.row);
+    //         row = v.row;
+    //         editShow.value = true;
+    //     }
+    // },
     {
         label:"删除",
         type:"danger",

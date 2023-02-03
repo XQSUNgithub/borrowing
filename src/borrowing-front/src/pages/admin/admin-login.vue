@@ -1,5 +1,6 @@
 <template>
-    <dataViewVue v-show="show"
+    <dataViewVue
+        v-show="show"
         :title="title"
         :data="tabledata"
         :action="action"
@@ -40,7 +41,7 @@ const tableName = "User";
 const key = "uuid";
 const act = "1";
 
-const page = "登录管理";
+const page = "账户管理";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
@@ -97,29 +98,25 @@ const form = ref([
         type:"input",
         label:"账户",
         prop:"uuid",
-        disabled:true,
-        placeholder:"1234"
+        disabled:true
     },
     {
         type:"input",
         label:"姓名",
         prop:"realname",
-        disabled:false,
-        placeholder:"safdsf"
+        disabled:false
     },
     {
         type:"input",
         label:"密码",
         prop:"password",
-        disabled:false,
-        placeholder:"safdsf"
+        disabled:false
     },
     {
         type:"select",
         label:"身份码",
         prop:"state",
         disabled:false,
-        placeholder:"12313",
         option:[
             {
                 label:"管理员",

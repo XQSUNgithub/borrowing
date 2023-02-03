@@ -9,6 +9,7 @@ import 'element-plus/es/components/icon/style/css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import EIcon from "@/components/EIcon.vue";
 import lazyPlugin from 'vue3-lazy'
+import infiniteScroll from "vue-infinite-scroll";
 
 const url = `http://secret.jluyyds.ltd/static/10179.png`;
 
@@ -33,6 +34,7 @@ app
         loading: url,
         error: url
     })
+    .use(infiniteScroll)
     .component('e-icon',EIcon)
     .mount('#app');
 

@@ -14,6 +14,7 @@ export const apiUrl = {
     insert:`${url}/insert`,
     update:`${url}/edit`,
     delete:`${url}/delete`,
+    borrow:`${url}/borrow`,
     test:`${url}/test`
 };
 

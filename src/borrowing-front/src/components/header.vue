@@ -6,18 +6,21 @@
                 <Fold v-show="!isCollapse"/>
             </el-icon>
             <div class="auto"></div>
+            <el-button :icon="Refresh" v-if="show" @click="change" type="primary" size="small" circle/>
             <el-button :icon="SwitchButton" @click="exit" type="danger" size="small" circle/>
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed  } from "vue";
+import { computed,onMounted,ref } from "vue";
 import {useStore} from "vuex";
-import { Expand, Fold,SwitchButton } from '@element-plus/icons-vue';
-import {removeKey} from "@/api/util";
-import { useRouter } from "vue-router";
+import { Expand, Fold,SwitchButton,Refresh } from '@element-plus/icons-vue';
+import {removeKey,ID,sure} from "@/api/util";
+import { useRoute, useRouter } from "vue-router";
+import {verify} from "@/api/net";
 
+const route = useRoute();
 const router = useRouter();
 
 const store = useStore();
@@ -30,17 +33,33 @@ const isCollapse = computed({
     }
 });
 
-const exit = ()=>{
-    window.confirm('是否退出系统?',"提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-    }).then(()=>{
-        removeKey("token");
-        router.push({path:"/"});
-    }).catch(()=>{
+const path = computed(()=>route.path);
+const ver = ref(false);
+const show = computed(()=>/user|admin/.test(path.value)&&ver.value);
 
+const change = ()=>{ 
+    sure(`是否切换[${path.value==="/admin"?"普通用户":"管理员"}]系统?`)(()=>{
+        if(path.value==="/admin"){
+            router.push({path:"/user"});
+        }else{
+            router.push({path:"/admin"});
+        }
     });
 }
+
+const exit = ()=>{
+    sure('是否退出系统?')(()=>{
+        removeKey("token");
+        router.push({path:"/"});
+    });
+}
+
+onMounted(()=>{
+    verify("1").then(v=>{
+        const {data:{data:{uuid}}} = v;
+        ver.value = true;
+    }).catch(err=>{ver.value=false;});
+});
 
 </script>
 

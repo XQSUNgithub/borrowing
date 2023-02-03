@@ -14,7 +14,7 @@ const menu = ref([
                 {
                     label:"矿物查阅"
                 },{
-                    label:"借出查阅"
+                    label:"借还查阅"
                 }
             ]
         },
@@ -23,7 +23,7 @@ const menu = ref([
             icon:"ElementPlus"
         },
         {
-            label:"审批管理",
+            label:"审批查看",
             icon:"Histogram",
             children:[
                 {

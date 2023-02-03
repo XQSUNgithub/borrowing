@@ -15,17 +15,17 @@
         :action="exitBar"
         title="记录编辑"
     />
-    <dataEditVue
+    <!-- <dataEditVue
         :show="true"
         v-show="show"
         :form="addform"
         v-model:data="addBuf"
         :rules="rules"
         :action="addBar"
-        title="记录创建"
+        title="用户创建"
         :adder="true"
         :close="false"
-    />
+    /> -->
 </template>
 
 <script setup>
@@ -36,11 +36,12 @@ import {ref,computed,onMounted} from 'vue';
 import { ID,error,success,sure } from '@/api/util';
 import {query,insert,update,remove} from '@/api/net';
 
-const tableName = "Collection";
-const key = "cid";
+const tableName = "Record";
+const key = "id";
 const act = "1";
+const module = "record";
 
-const page = "矿物管理";
+const page = "审批记录";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
@@ -66,158 +67,73 @@ const bar = ref([
 
 const label = ref([
     {
+        prop:"id",
+        label:"审批单号",
+        width:"auto",
+        fixed:true,
+        fold:false
+    },{
         prop:"cid",
-        label:"编号",
-        width:"auto",
-        fixed:true,
-        fold:false
-    },{
-        prop:"name",
-        label:"名录",
-        width:"auto",
-        fixed:true,
-        fold:false
-    },{
-        prop:"provider",
-        label:"标本提供者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"gatherer",
-        label:"采集者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"donor",
-        label:"捐赠者",
-        width:"auto",
-        fixed:false,
-        fold:true
-    },{
-        prop:"recorder",
-        label:"录入者",
+        label:"矿物编号",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"providetime",
-        label:"提供时间",
+        prop:"time0",
+        label:"time0",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"num",
-        label:"标本数量",
+        prop:"time1",
+        label:"time1",
         width:"auto",
         fixed:false,
         fold:false
     },{
-        prop:"source",
-        label:"产地",
-        width:"200",
-        fixed:false,
-        fold:false
-    },{
-        prop:"purpose",
-        label:"用途",
-        width:"200",
-        fixed:false,
-        fold:true
-    },{
-        prop:"location",
-        label:"库存位置号",
+        prop:"time2",
+        label:"time2",
         width:"auto",
         fixed:false,
         fold:false
-    },{
-        prop:"access",
-        label:"获取途径",
-        width:"auto",
-        fixed:false,
-        fold:true
     }
 ]);
 
 const codes = [
     {
         type:"input",
-        prop:"name",
-        label:"名录",
+        prop:"cid",
+        label:"矿物编号",
         disabled:false,
-        need:true,
+        need:true
     },{
         type:"input",
-        prop:"provider",
-        label:"标本提供者",
+        prop:"time0",
+        label:"time0",
         disabled:false
     },{
         type:"input",
-        prop:"gatherer",
-        label:"采集者",
+        prop:"time1",
+        label:"time0",
         disabled:false
     },{
         type:"input",
-        prop:"donor",
-        label:"捐赠者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"recorder",
-        label:"录入者",
-        disabled:false
-    },{
-        type:"input",
-        prop:"providetime",
-        label:"提供时间",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"num",
-        label:"标本数量",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"source",
-        label:"产地",
-        disabled:false
-    },{
-        type:"input",
-        prop:"purpose",
-        label:"用途",
-        disabled:false
-    },{
-        type:"input",
-        prop:"location",
-        label:"库存位置号",
-        disabled:false,
-        need:true,
-    },{
-        type:"input",
-        prop:"access",
-        label:"获取途径",
+        prop:"time2",
+        label:"time0",
         disabled:false
     }
 ];
 
-const from = ref([{    
+const from = ref([{
         type:"input",
-        prop:"cid",
-        label:"编号",
+        prop:"id",
+        label:"审批单号",
         disabled:false
     },...codes]);
 
 const addform = ref(codes);
 
-const edit = ref({
-    uuid:"",
-    realname:"",
-    password:"",
-    state:"0"
-});
+const edit = ref({});
 
 const addBuf = ref({
     destroyed:"no"
@@ -231,6 +147,7 @@ const exitBar = ref([
                 update(tableName,key,edit.value,act).then(v=>{
                     const {data} = v;
                     if(data&&data.data){
+                        console.log(data.data);
                         Object.assign(row,data.data);
                         success("修改成功");
                     }else{
@@ -260,11 +177,10 @@ const addBar = ref([
                             tabledata.value.push(pack);
                             success("创建成功");
                         }else{
-                            error("创建失败");
+                            error("创建成功");
                         }
                     }).catch(err=>{
-                        console.log(err);
-                        error("创建失败");
+                        
                     });
                 });
             }
@@ -280,20 +196,33 @@ const action = ref([
             row = v.row;
             editShow.value = true;
         }
-    },
-    {
+    },{
+        label:"同意",
+        type:"success",
+        call:v=>{
+            sure("是否同意?")(()=>{
+                success("已批准");
+            });
+        }
+    },{
+        label:"打回",
+        type:"warning",
+        call:v=>{
+            sure("是否打回审批?")(()=>{
+                success("已打回");
+            });
+        }
+    },{
         label:"删除",
         type:"danger",
         call:v=>{
             const row = v.row;
-            const {cid} = row;
-            row.destroyed = "yes";
-            sure(`是否删除记录[${cid}]?`)(()=>{
+            const {uuid} = row;
+            sure(`是否删除记录[${row.cid}]?`)(()=>{
                 remove(tableName,key,row,act).then(v=>{
                     const {data} = v;
                     if(data.data){
-                        console.log(data.data);
-                        tabledata.value = tabledata.value.filter(v=>v.cid!=cid);
+                        tabledata.value = tabledata.value.filter(v=>v.uuid!==uuid);
                         success("删除成功");
                     }else{
                         error("删除失败");
@@ -311,7 +240,7 @@ const rules = ref({});
 
 function setRules(){
     rules.value = {
-        cid:{ required: true, message: `请输入矿物ID`, trigger: 'blur' }
+        id:{ required: true, message: `请输入矿物ID`, trigger: 'blur' }
     };
     codes.forEach(v=>{
         const {prop,label,disabled,need} = v;
@@ -325,7 +254,7 @@ function setRules(){
 setRules();
 
 function refresh(){
-    query(tableName,null,act).then(v=>{
+    query(tableName,null,module,act).then(v=>{
         const {data:{data}} = v;
         tabledata.value.length&&success("刷新成功");
         tabledata.value = data;

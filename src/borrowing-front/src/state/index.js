@@ -3,7 +3,8 @@ import { createStore } from "vuex";
 const store = {
     state: {
         isCollapse:false,
-        menuSelected:"登录管理",
+        menuSelected:"",
+        hint:["审批处理"],
         info:{
 
         },
