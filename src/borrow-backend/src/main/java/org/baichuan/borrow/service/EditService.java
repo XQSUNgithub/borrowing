@@ -20,9 +20,11 @@ public interface EditService {
             return Result.error(REQUEST_ERROR);
         Field[] fields= Class.forName("org.baichuan.borrow.domin."+loginVo.getTableName()).getDeclaredFields();
         for(Field curField:fields){
-                if(curField.getName().equals(loginVo.getKey()))
+            if(curField.getName().equals(loginVo.getKey()))
                     continue;
-                userDao.editUser(loginVo.getTableName(),curField.getName(),loginVo.getValue().getString(curField.getName()),loginVo.getKey(),loginVo.getValue().getString(loginVo.getKey()));
+            if(loginVo.getValue().getString(curField.getName())==null)
+                loginVo.getValue().put(curField.getName(),userDao.getByField(loginVo.getKey(),id,loginVo.getTableName()).getString(curField.getName()));
+            userDao.editUser(loginVo.getTableName(),curField.getName(),loginVo.getValue().getString(curField.getName()),loginVo.getKey(),loginVo.getValue().getString(loginVo.getKey()));
             }
             return Result.success(loginVo.getValue());
 
