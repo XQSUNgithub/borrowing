@@ -59,19 +59,19 @@ const label = ref([
         fold:false
     },{
         prop:"time0",
-        label:"time0",
+        label:"发起节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time1",
-        label:"time1",
+        label:"处理节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time2",
-        label:"time2",
+        label:"归还节点",
         width:"auto",
         fixed:false,
         fold:false
@@ -88,17 +88,17 @@ const codes = [
     },{
         type:"input",
         prop:"time0",
-        label:"time0",
+        label:"发起节点",
         disabled:false
     },{
         type:"input",
         prop:"time1",
-        label:"time0",
+        label:"处理节点",
         disabled:false
     },{
         type:"input",
         prop:"time2",
-        label:"time0",
+        label:"归还节点",
         disabled:false
     }
 ];
@@ -185,14 +185,14 @@ const action = ref([
         type:"danger",
         call:v=>{
             const row = v.row;
-            const {cid} = row;
+            const {id:cid} = row;
             row.destroyed = "yes";
             sure(`是否删除记录[${cid}]?`)(()=>{
                 remove(tableName,key,row,act).then(v=>{
                     const {data} = v;
                     if(data.data){
                         console.log(data.data);
-                        tabledata.value = tabledata.value.filter(v=>v.cid!=cid);
+                        tabledata.value = tabledata.value.filter(v=>v.id!=cid);
                         success("删除成功");
                     }else{
                         error("删除失败");

@@ -9,7 +9,7 @@
                 </div>
             </div>
         </template>
-        <dataStepVue v-for="item in data" :process="item"/>
+        <dataStepVue v-for="item in data" :process="item" :act="act"/>
         <div style="display: flex;justify-content: center;margin-top: 40px;">
             <el-pagination
                 v-model:currentPage="index"
@@ -57,6 +57,10 @@ const props = defineProps({
     label:{
         type:Array,
         default:()=>[]
+    },
+    act:{
+        type:String,
+        default:"1"
     }
 });
 

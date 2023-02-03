@@ -13,6 +13,7 @@
         :action="action"
         :bar="bar"
         :label="label"
+        :act="0"
     />
     <!-- <dataEditVue
         :show="true"
@@ -87,19 +88,19 @@ const label = ref([
         fold:false
     },{
         prop:"time0",
-        label:"time0",
+        label:"发起节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time1",
-        label:"time1",
+        label:"处理节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time2",
-        label:"time2",
+        label:"归还节点",
         width:"auto",
         fixed:false,
         fold:false
@@ -116,17 +117,17 @@ const codes = [
     },{
         type:"input",
         prop:"time0",
-        label:"time0",
+        label:"发起节点",
         disabled:false
     },{
         type:"input",
         prop:"time1",
-        label:"time0",
+        label:"处理节点",
         disabled:false
     },{
         type:"input",
         prop:"time2",
-        label:"time0",
+        label:"归还节点",
         disabled:false
     }
 ];
@@ -252,11 +253,10 @@ setRules();
 
 function refresh(){
     const uuid = getInfo("uuid");
-    query(tableName,null,null,act,{uuid}).then(v=>{
+    query(tableName,key,null,act,{uuid}).then(v=>{
         const {data:{data}} = v;
         tabledata.value.length&&success("刷新成功");
         tabledata.value = data;
-        console.log(data);
         if(data.length){
             store.commit("setState",["hint",[page]]);
         }else{

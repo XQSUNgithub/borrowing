@@ -13,7 +13,7 @@
         v-model:data="edit"
         :rules="rules"
         :action="exitBar"
-        title="出库申请"
+        title="归还申请"
         :close="false"
     />
 </template>
@@ -25,13 +25,13 @@ import dataBoxVue from '@/components/data-box.vue';
 import { useStore } from 'vuex';
 import {ref,computed,onMounted} from 'vue';
 import { ID,error,success,sure,getInfo } from '@/api/util';
-import {query,insert} from '@/api/net';
+import {query,insert,update} from '@/api/net';
 
 const tableName = "Record module:commonRecord";
 const key = "id";
 const act = "0";
 
-const page = "借还查阅";
+const page = "借出查阅";
 
 const store = useStore();
 const show = computed(()=>store.state.menuSelected===page);
@@ -70,19 +70,19 @@ const label = ref([
         fold:false
     },{
         prop:"time0",
-        label:"time0",
+        label:"发起节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time1",
-        label:"time1",
+        label:"处理节点",
         width:"auto",
         fixed:false,
         fold:false
     },{
         prop:"time2",
-        label:"time2",
+        label:"归还节点",
         width:"auto",
         fixed:false,
         fold:false
@@ -95,23 +95,26 @@ const codes = [
         type:"input",
         prop:"cid",
         label:"矿物编号",
-        disabled:false,
+        disabled:true,
         need:true
     },{
         type:"input",
         prop:"time0",
-        label:"time0",
-        disabled:false
+        label:"发起节点",
+        disabled:true,
+        need:false
     },{
         type:"input",
         prop:"time1",
-        label:"time0",
-        disabled:false
+        label:"处理节点",
+        disabled:true,
+        need:false
     },{
         type:"input",
         prop:"time2",
-        label:"time0",
-        disabled:false
+        label:"归还节点",
+        disabled:false,
+        need:false
     }
 ];
 
@@ -119,12 +122,7 @@ const from = ref(codes);
 
 const addform = ref(codes);
 
-const edit = ref({
-    uuid:"",
-    realname:"",
-    password:"",
-    state:"0"
-});
+const edit = ref({});
 
 const addBuf = ref({
     destroyed:"no"
@@ -136,9 +134,16 @@ const exitBar = ref([
         type:"success",
         call:(v)=>{
             if(v){
-                sure(`是否递交申请?`)(()=>{
-                    success("申请成功");
+                const {id} = row||{};
+                sure(`是否递交申请?`)(async ()=>{
                     editShow.value = false;
+                    const {data} = await update(tableName,key,{id,type:"归还"},act);
+                    if(data&&data.data){
+                        success("申请成功");
+                        refresh();
+                    }else{
+                        error("审批异常");
+                    }
                 });
                 // update(tableName,key,edit.value,act).then(v=>{
                 //     const {data} = v;
