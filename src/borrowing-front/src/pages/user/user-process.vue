@@ -45,9 +45,9 @@ const load = () => {
     console.log(count.value);
 }
 
-const tableName = "Record module:commonApproval";
+const tableName = "Record module:commonRecord";
 const key = "id";
-const act = "1";
+const act = "0";
 
 const page = "审批记录";
 
@@ -253,8 +253,9 @@ setRules();
 
 function refresh(){
     const uuid = getInfo("uuid");
-    query(tableName,key,null,act,{uuid}).then(v=>{
+    query(tableName,null,act).then(v=>{
         const {data:{data}} = v;
+        console.log(data);
         tabledata.value.length&&success("刷新成功");
         tabledata.value = data;
         if(data.length){

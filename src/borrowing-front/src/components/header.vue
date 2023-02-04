@@ -56,8 +56,8 @@ const exit = ()=>{
 
 onMounted(()=>{
     verify("1").then(v=>{
-        const {data:{data:{uuid}}} = v;
-        ver.value = true;
+        const {data:{data:{uuid,state}}} = v;
+        ver.value = state==false;
     }).catch(err=>{ver.value=false;});
 });
 

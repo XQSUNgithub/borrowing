@@ -31,10 +31,10 @@ const menu = ref([
                 }
             ]
         },
-        {
-            label:"设置",
-            icon:"Setting"
-        }
+        // {
+        //     label:"设置",
+        //     icon:"Setting"
+        // }
         // {
         //     label:"审批日志",
         //     icon:"BellFilled",
